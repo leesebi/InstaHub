@@ -88,14 +88,17 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.ACTIVE;
     }
 
+    // 이메일 업데이트
     public void updateEmail(String email){
         this.email = email;
     }
 
+    // userId 업데이트
     public void updateUserId(String userId){
         this.userId = userId;
     }
 
+    // 비밀번호 업데이트
     public void updatePassword(String password){
         this.password = password;
     }

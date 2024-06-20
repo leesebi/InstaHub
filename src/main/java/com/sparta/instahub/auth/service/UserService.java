@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-
+    // 프로필 업데이트
     public User update(Long id, String newEmail, String newUserId) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("다시 확인해주세요")
