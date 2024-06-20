@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     // 기본키
@@ -65,8 +67,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments; // 사용자가 작성한 댓글 목록
 
-    public User() {
-
+    public User(String userId, String name, String email, String password, String introduction) {
+        this.userId = userId;
+        this.username = name;
+        this.email = email;
+        this.password = password;
+        this.introduction = introduction;
     }
 
     // 사용자 역할 및 상태를 업데이트
