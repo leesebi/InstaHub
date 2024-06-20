@@ -1,4 +1,4 @@
-package com.sparta.instahub.user.entity;
+package com.sparta.instahub.auth.entity.entity;
 
 public enum UserStatus {
     ACTIVE,

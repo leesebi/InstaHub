@@ -1,15 +1,14 @@
 package com.sparta.instahub.auth.entity;
 
+import com.sparta.instahub.auth.entity.entity.UserRole;
+import com.sparta.instahub.auth.entity.entity.UserStatus;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
-import com.sparta.instahub.user.entity.UserRole;
-import com.sparta.instahub.user.entity.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
