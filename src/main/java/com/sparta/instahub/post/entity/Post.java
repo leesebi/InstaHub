@@ -39,6 +39,7 @@ public class Post extends BaseEntity {
     //게시물에 달린 댓글 목록
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt; // 생성일시
 
