@@ -1,4 +1,4 @@
-package com.sparta.instahub.user.repository;
+package com.sparta.instahub.auth.repository;
 
 import com.sparta.instahub.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
