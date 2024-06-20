@@ -1,9 +1,9 @@
 package com.sparta.instahub.post.service;
 
 import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
-import com.sparta.instahub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
