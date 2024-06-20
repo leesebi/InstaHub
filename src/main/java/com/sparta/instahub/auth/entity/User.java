@@ -1,7 +1,5 @@
 package com.sparta.instahub.auth.entity;
 
-import com.sparta.instahub.auth.entity.entity.UserRole;
-import com.sparta.instahub.auth.entity.entity.UserStatus;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
