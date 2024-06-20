@@ -6,11 +6,13 @@ import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.user.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     // 기본키
@@ -58,4 +60,12 @@ public class User extends BaseEntity {
     // User와 Comment는 일대다 관계
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments; // 사용자가 작성한 댓글 목록
+
+    public User(String userId, String name, String email, String password, String introduction) {
+        this.userId = userId;
+        this.username = name;
+        this.email = email;
+        this.password = password;
+        this.introduction = introduction;
+    }
 }
