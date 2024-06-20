@@ -44,13 +44,26 @@ public class PostService {
 
     // 게시물 수정
     public Post updatePost(Long id, String title, String content, String imageUrl) {
+        User currentUser = getCurrentUser();// 현재 로그인된 사용자 가져오기
         Post post = getPostById(id); // ID로 게시물 조회
+
+        if(!post.getUser().equals(currentUser)) {
+            throw new IllegalArgumentException("You are not authorized to update this post");
+        }
         post.update(title, content, imageUrl); // 게시물 업데이트
         return postRepository.save(post); // 업데이트된 게시물 저장
     }
 
     // 게시물 삭제
     public void deletePost(Long id) {
+        User currentUser = getCurrentUser(); // 현재 로그인된 사용자 가져오기
+        Post post = getPostById(id); // ID로 게시물 조회
+
+        // 현재 로그인된 사용자가 게시글 작성자인지 확인
+        if (!post.getUser().equals(currentUser)) {
+            throw new IllegalArgumentException("You are not authorized to delete this post");
+        }
+
         postRepository.deleteById(id); // ID로 게시물 삭제
     }
 
