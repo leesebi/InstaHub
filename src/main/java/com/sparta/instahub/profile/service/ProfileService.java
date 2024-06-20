@@ -6,6 +6,7 @@ import com.sparta.instahub.profile.entity.Profile;
 import com.sparta.instahub.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserService userService;
 
+    @Transactional
     public Profile updateProfile(String userId, ProfileRequestDto requestDto) {
         userService.update(userId, requestDto.getEmail(), requestDto.getUserId());
 
