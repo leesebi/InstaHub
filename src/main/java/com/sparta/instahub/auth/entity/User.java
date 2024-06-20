@@ -3,6 +3,7 @@ package com.sparta.instahub.auth.entity;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
+import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -64,6 +65,10 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user")
     private Profile profile;
 
+    // User와 PasswordHistroy는 1대다 관계
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PasswordHistory> passwordHistories; // 사용자가 작성한 비밀번호 목록
+
     public User() {
 
     }
@@ -89,5 +94,9 @@ public class User extends BaseEntity {
 
     public void updateUserId(String userId){
         this.userId = userId;
+    }
+
+    public void updatePassword(String password){
+        this.password = password;
     }
 }
