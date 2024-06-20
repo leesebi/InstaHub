@@ -92,6 +92,11 @@ public class AdminService {
         postRepository.deleteAll();
     }
 
+    // 특정 게시글 삭제 (관리자)
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
+    }
+
     // 현재 로그인된 관리자 가져오기
     private User getCurrentAdmin() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -108,5 +113,4 @@ public class AdminService {
         }
         return user;
     }
-
 }

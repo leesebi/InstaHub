@@ -83,5 +83,19 @@ public class AdminController {
                 .build();
         return new ResponseEntity<>(postResponseDto, HttpStatus.CREATED);
     }
+
+    // 모든 게시글 삭제
+    @DeleteMapping("/posts")
+    public ResponseEntity<Void> deleteAllPosts() {
+        adminService.deleteAllPosts();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // 특정 게시글 삭제 (관리자)
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+        adminService.deletePost(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
 
