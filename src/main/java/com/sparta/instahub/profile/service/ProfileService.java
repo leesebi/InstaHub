@@ -15,10 +15,10 @@ public class ProfileService {
     private final UserService userService;
 
     @Transactional
-    public Profile updateProfile(String userId, ProfileRequestDto requestDto) {
-        userService.update(userId, requestDto.getEmail(), requestDto.getUserId());
+    public Profile updateProfile(Long id, ProfileRequestDto requestDto) {
+        userService.update(id, requestDto.getEmail(), requestDto.getUserId());
 
-        Profile profile = profileRepository.findByUser_UserId(userId).orElseThrow(
+        Profile profile = profileRepository.findByUser_Id(id).orElseThrow(
                 () -> new IllegalArgumentException("다시 확인해 주세요")
         );
 

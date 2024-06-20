@@ -15,11 +15,12 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<Profile> updateProfile(@PathVariable String userId,
-                                                 @RequestBody ProfileRequestDto requestDto){
-        return ResponseEntity.ok(profileService.updateProfile(userId, requestDto));
+    @PutMapping("/{Id}")
+    public ResponseEntity<Profile> updateProfile(@PathVariable Long Id,
+                                                 @RequestBody ProfileRequestDto requestDto) {
+        return ResponseEntity.ok(profileService.updateProfile(Id, requestDto));
     }
+
 
 
 }
