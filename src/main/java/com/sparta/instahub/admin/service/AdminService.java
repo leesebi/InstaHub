@@ -1,11 +1,11 @@
 package com.sparta.instahub.admin.service;
 
 import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
-import com.sparta.instahub.auth.entity.entity.UserRole;
-import com.sparta.instahub.auth.entity.entity.UserStatus;
-import com.sparta.instahub.auth.repository.UserRepository;
+import com.sparta.instahub.auth.entity.UserRole;
+import com.sparta.instahub.auth.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +43,6 @@ public class AdminService {
                 .email(email)
                 .password(user.getPassword())
                 .username(username)
-                .introduction(user.getIntroduction())
                 .userStatus(userStatus)
                 .userRole(userRole)
                 .refreshToken(user.getRefreshToken())
