@@ -7,16 +7,20 @@ import jakarta.persistence.*;
 @Entity
 public class Profile {
 
+    // 기본 키
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 자기소개
     @Column
     private String introduction;
 
+    // 주소
     @Column
     private String address;
 
+    // User와 1대1 관계
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
