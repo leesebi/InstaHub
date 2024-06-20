@@ -4,10 +4,12 @@ import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
 @Entity
+@Getter
 public class User extends BaseEntity {
 
     // 기본키
@@ -29,7 +31,7 @@ public class User extends BaseEntity {
 
     //이름
     @Column(nullable = false)
-    private String name;
+    private String username;
 
     // 자기소개 - null 허용
     @Column
