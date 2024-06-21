@@ -49,7 +49,7 @@ public class CommentService {
 
     //댓글 수정
     @Transactional
-    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, User user){
+    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, String username){
         Comment comment=findCommentById(id);
         if(comment.getUser().getId()==user.getId()){
             comment.update(requestDto);
@@ -59,7 +59,7 @@ public class CommentService {
     }
 
     //댓글 삭제
-    public ResponseEntity<String> deleteComment(Long id, User user){
+    public ResponseEntity<String> deleteComment(Long id, String username){
         Comment comment=findCommentById(id);
         if(comment.getUser().getId()==user.getId()) {
             commentRepository.delete(comment);
