@@ -7,6 +7,8 @@ import com.sparta.instahub.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,8 +58,9 @@ public class PostController {
 
     // 새 게시물 생성 요청 처리
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto) {
-        Post post = postService.createPost(postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl());
+    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto,
+                                                      @AuthenticationPrincipal UserDetails userDetails) {
+        Post post = postService.createPost(postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl(), userDetails.getUsername());
         PostResponseDto postResponseDto = PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -72,8 +75,8 @@ public class PostController {
 
     // 게시물 수정 요청 처리
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
-        Post post = postService.updatePost(id, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl());
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetails userDetails) {
+        Post post = postService.updatePost(id, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl(), userDetails.getUsername());
         PostResponseDto postResponseDto = PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -89,8 +92,8 @@ public class PostController {
 
     // 게시물 삭제 요청 처리
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id); // 게시물 삭제
+    public ResponseEntity<Void> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        postService.deletePost(id, userDetails.getUsername()); // 게시물 삭제
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
