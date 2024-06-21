@@ -1,7 +1,5 @@
 package com.sparta.instahub.auth.entity;
 
-import com.sparta.instahub.auth.entity.entity.UserRole;
-import com.sparta.instahub.auth.entity.entity.UserStatus;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
@@ -41,10 +39,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String username;
 
-    // 자기소개 - null 허용
-    @Column
-    private String introduction;
-
     // 사용자 상태
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -67,12 +61,11 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments; // 사용자가 작성한 댓글 목록
 
-    public User(String userId, String name, String email, String password, String introduction) {
+    public User(String userId, String name, String email, String password) {
         this.userId = userId;
         this.username = name;
         this.email = email;
         this.password = password;
-        this.introduction = introduction;
     }
 
     // 사용자 역할 및 상태를 업데이트
@@ -88,5 +81,10 @@ public class User extends BaseEntity {
     // 차단 풀기
     public void unblockUser() {
         this.userStatus = UserStatus.ACTIVE;
+    }
+
+    //리프레시 토큰 업데이트
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
