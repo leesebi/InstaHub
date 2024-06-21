@@ -114,6 +114,7 @@ public class UserServiceImpl implements UserService {
         );
         // logout
         user.logout();
+        user.clearRefreshToken();
         // user 정보 저장
         userRepository.save(user);
     }
