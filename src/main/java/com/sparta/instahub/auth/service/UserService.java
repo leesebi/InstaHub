@@ -15,7 +15,10 @@ import java.util.Optional;
 
 
 public interface UserService {
-    // 회원가입
+    // 사용자 정보 업데이트
+     User update(String userId, String newEmail, String newUserId);
+
+        // 회원가입
     void signup(SignupRequest signupRequest);
 
     // 로그인

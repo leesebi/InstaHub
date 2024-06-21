@@ -4,7 +4,6 @@ import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
-import com.sparta.instahub.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,8 +35,10 @@ public class PostService {
 
     // 새 게시물 생성
     @Transactional
-    public Post createPost(String title, String content, String imageUrl) {
-        User user = getCurrentUser(); // 현재 로그인된 사용자 가져오기
+    public Post createPost(String title, String content, String imageUrl, String username) {
+        // 현재 로그인된 사용자 가져오기
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         Post post = Post.builder()
                 .user(user)
                 .title(title)
@@ -49,8 +50,9 @@ public class PostService {
 
     // 게시물 수정
     @Transactional
-    public Post updatePost(Long id, String title, String content, String imageUrl) {
-        User currentUser = getCurrentUser();// 현재 로그인된 사용자 가져오기
+    public Post updatePost(Long id, String title, String content, String imageUrl,String username) {
+        // 현재 로그인된 사용자 가져오기
+        User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Post post = getPostById(id); // ID로 게시물 조회
 
         if(!post.getUser().equals(currentUser)) {
@@ -62,8 +64,8 @@ public class PostService {
 
     // 게시물 삭제
     @Transactional
-    public void deletePost(Long id) {
-        User currentUser = getCurrentUser(); // 현재 로그인된 사용자 가져오기
+    public void deletePost(Long id,String username) {
+        User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Post post = getPostById(id); // ID로 게시물 조회
 
         // 현재 로그인된 사용자가 게시글 작성자인지 확인
@@ -72,18 +74,5 @@ public class PostService {
         }
 
         postRepository.deleteById(id); // ID로 게시물 삭제
-    }
-
-    // 현재 로그인된 사용자 가져오기
-    private User getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }
