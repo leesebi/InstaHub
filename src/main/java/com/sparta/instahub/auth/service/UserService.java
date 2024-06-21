@@ -1,23 +1,30 @@
 package com.sparta.instahub.auth.service;
 
+import com.sparta.instahub.auth.dto.SignupRequestDto;
+import com.sparta.instahub.auth.dto.TokenResponseDto;
+import com.sparta.instahub.auth.entity.LoginRequest;
+import com.sparta.instahub.auth.entity.LoginResponse;
+import com.sparta.instahub.auth.entity.SignupRequest;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
+import java.util.Optional;
 
-    public User update(String userId, String newEmail, String newUserId) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new IllegalArgumentException("다시 확인해주세요")
-        );
 
-        user.updateUserId(newUserId);
-        user.updateEmail(newEmail);
+public interface UserService {
+    // 사용자 정보 업데이트
+     User update(String userId, String newEmail, String newUserId);
 
-        return userRepository.save(user);
-    }
+        // 회원가입
+    void signup(SignupRequest signupRequest);
+
+    // 로그인
+    LoginResponse login(LoginRequest loginRequest);
+
+
+    // 리프레시 토큰
+    TokenResponseDto refresh(String refreshToken);
 }

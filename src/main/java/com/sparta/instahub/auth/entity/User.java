@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     // 기본키
@@ -64,8 +66,11 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user")
     private Profile profile;
 
-    public User() {
-
+    public User(String userId, String name, String email, String password) {
+        this.userId = userId;
+        this.username = name;
+        this.email = email;
+        this.password = password;
     }
 
     // 사용자 역할 및 상태를 업데이트
@@ -89,5 +94,10 @@ public class User extends BaseEntity {
 
     public void updateUserId(String userId){
         this.userId = userId;
+    }
+
+    //리프레시 토큰 업데이트
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
