@@ -44,4 +44,8 @@ public interface UserService {
     User blockUser(Long id);
 
     User unblockUser(Long id);
+
+
+    User getUserByName(String username);
+
 }

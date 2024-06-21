@@ -38,11 +38,12 @@ public class CommentController {
     }
 
     //댓글 수정
-    @PutMapping("/{postId}/comments")
+    @PutMapping("/{postId}/comments{commentId}")
     public CommentResponseDto updateComment(@PathVariable Long postId,
+                                            @PathVariable Long commentId,
                                             @RequestBody CommentRequestDto requestDto,
                                             @AuthenticationPrincipal UserDetails userDetails){
-        return commentService.updateComment(postId, userDetails.getUsername());
+        return commentService.updateComment(postId, requestDto,userDetails.getUsername());
 
     }
 
