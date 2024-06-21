@@ -5,7 +5,10 @@ import com.sparta.instahub.auth.entity.LoginRequest;
 import com.sparta.instahub.auth.entity.LoginResponse;
 import com.sparta.instahub.auth.entity.SignupRequest;
 import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.auth.entity.UserRole;
+import com.sparta.instahub.auth.entity.UserStatus;
 
+import java.util.List;
 
 public interface UserService {
     // 사용자 정보 업데이트
@@ -25,4 +28,20 @@ public interface UserService {
 
     // 탈퇴
     void withdraw(String userId, String password, String accessToken, String refreshToken);
+
+    User getCurrentAdmin();
+
+    List<User> getAllUsers();
+
+    User getUserById(Long id);
+
+    User updateUser(Long id, String username, String email, UserRole userRole, UserStatus userStatus);
+
+    void deleteUser(Long id);
+
+    User promoteUserToAdmin(Long id);
+
+    User blockUser(Long id);
+
+    User unblockUser(Long id);
 }
