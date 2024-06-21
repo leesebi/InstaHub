@@ -27,7 +27,7 @@ public class CommentController {
     public CommentResponseDto createComment(@PathVariable Long postId,
                                             @Valid @RequestBody CommentRequestDto requestDto,
                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return commentService.createComment(postId, requestDto  ,userDetails.getUser());
+        return commentService.createComment(postId, requestDto,userDetails.getUser());
     }
 
     //댓글 조회

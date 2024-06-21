@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 public class Post extends BaseEntity {
 
+
     // 기본 키
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +47,10 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt; // 수정일시
 
+    //Comment Service 내 post.getComments 관련
+    @OneToMany(mappedBy = "post", cascade =CascadeType.ALL, orphanRemoval = true)
+    public List<Comment> getComments;
+
     // 빌더 패턴을 사용한 생성자
     @Builder
     public Post(User user,String title, String content, String imageUrl) {
@@ -68,4 +73,8 @@ public class Post extends BaseEntity {
         this.imageUrl = imageUrl;
         this.updatedAt = LocalDateTime.now(); // 현재 시간을 수정일시로 설정
     }
+
+
+
+
 }

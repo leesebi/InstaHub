@@ -6,6 +6,7 @@ import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.comment.dto.CommentResponseDto;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.post.entity.Post;
+import com.sparta.instahub.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
 
     //댓글 생성
@@ -33,7 +35,7 @@ public class CommentService {
     //댓글 조회
     public List<CommentResponseDto> getAllComment(Long postId) {
         Post post=findPostById(postId);
-        /*List<Comment> commentList=post.getComments; */ //Post Entity 관련 부분이라 일단 두겠습니다.
+        List<Comment> commentList=post.getComments;
         List<CommentResponseDto> responseDtoList=new ArrayList<>();
         for(Comment responseDto : commentList){
             responseDtoList.add(new CommentResponseDto(responseDto));
