@@ -18,7 +18,7 @@ public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//ddd
+
     //댓글이 달린 게시물
     @ManyToOne
     @JoinColumn(name="post_id",nullable = false)

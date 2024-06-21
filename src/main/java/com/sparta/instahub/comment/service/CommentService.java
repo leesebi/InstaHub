@@ -1,6 +1,8 @@
 package com.sparta.instahub.comment.service;
 
 import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.auth.repository.UserRepository;
+import com.sparta.instahub.auth.service.UserService;
 import com.sparta.instahub.comment.Repository.CommentRepository;
 import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.comment.dto.CommentResponseDto;
@@ -22,11 +24,13 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-
+    private final UserRepository userRepository;
 
     //댓글 생성
-    public CommentResponseDto createComment (Long postId, CommentRequestDto requestDto, User user){
+    public CommentResponseDto createComment (Long postId, CommentRequestDto requestDto, String username){
         Post post=findPostById(postId);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        //userService에서 findByUsername 만들어서 연결하기.
         Comment comment=new Comment(requestDto, post, user);
         Comment savedComment=commentRepository.save(comment);
         return new CommentResponseDto(comment);
