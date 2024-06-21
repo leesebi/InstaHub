@@ -44,6 +44,8 @@ public class SecurityConfig {
                                 authorizeHttpRequests
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger 접근 허용
+                                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll() // 로그인, 회원가입 접근 허용
+                                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                         .anyRequest().permitAll() // 그 외 모든 요청 접근 허용
                         //.anyRequest().authenticated() // 그 외 모든 요청 인증처리
                 );

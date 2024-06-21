@@ -1,5 +1,6 @@
 package com.sparta.instahub.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"posts", "comments", "profile"})
 public class User extends BaseEntity {
 
     // 기본키
@@ -88,16 +90,44 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.ACTIVE;
     }
 
-    public void updateEmail(String email){
+    public void updateEmail(String email) {
         this.email = email;
     }
 
-    public void updateUserId(String userId){
+    public void updateUserId(String userId) {
         this.userId = userId;
     }
 
-    //리프레시 토큰 업데이트
+    // 로그인 상태 변경
+    public void login() {
+        this.userStatus = UserStatus.ACTIVE;
+    }
+
+    // 로그아웃 (UserStatus 변경)
+    public void logout() {
+        this.userStatus = UserStatus.LOGOUT; // userStatus를 LOGOUT으로 변경
+    }
+
+    // 탈퇴 (UserStatus 변경)
+    public void withdraw() {
+        this.userStatus = UserStatus.WITHDRAWN;
+    }
+
+    // 리프레시 토큰 업데이트
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void updateUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    // 토큰 삭제
+    public void clearRefreshToken() {
+        this.refreshToken = null;
     }
 }
