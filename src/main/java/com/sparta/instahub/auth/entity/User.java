@@ -83,6 +83,11 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.ACTIVE;
     }
 
+    // 로그아웃
+    public void logout() {
+        this.userStatus = UserStatus.LOGOUT; // userStatus를 LOGOUT으로 변경
+    }
+
     //리프레시 토큰 업데이트
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;

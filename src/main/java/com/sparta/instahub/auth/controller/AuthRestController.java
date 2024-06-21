@@ -52,6 +52,13 @@ public class AuthRestController {
         return new ResponseEntity<>("로그인 성공", headers, HttpStatus.OK);
     }
 
+    //logout
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout (@RequestParam String userId, String accessToken) {
+        userService.logout(userId, accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body("로그아웃 되었습니다");
+    }
+
     /**
      * 리프레시 토큰 재발급
      *

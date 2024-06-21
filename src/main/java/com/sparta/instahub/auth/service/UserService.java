@@ -24,4 +24,7 @@ public interface UserService {
 
     // 리프레시 토큰
     TokenResponseDto refresh(String refreshToken);
+
+    // 로그아웃
+    void logout(String userId, String accessToken);
 }

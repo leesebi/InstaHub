@@ -86,6 +86,15 @@ public class UserServiceImpl implements UserService {
         return new LoginResponse(accessToken, refreshToken);
     }
 
+    // logout method
+    @Override
+    public void logout(String userId, String accessToken) {
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        user.logout();
+    }
+
     /**
      * 리프레시 토큰으로 토큰 재발급
      *
