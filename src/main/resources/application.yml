@@ -23,3 +23,18 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+cloud:
+  aws:
+    s3:
+      bucketName: ${BUCKET_NAME}
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ap-southeast-2
+      auto: true
+    stack:
+      auto: true
+
+server:
+  port: 8080
