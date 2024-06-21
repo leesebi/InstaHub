@@ -1,6 +1,7 @@
 package com.sparta.instahub.post.dto;
 
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class PostRequestDto {
