@@ -21,6 +21,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
+
     //댓글 생성
     public CommentResponseDto createComment (Long postId, CommentRequestDto requestDto, User user){
         Post post=findPostById(postId);
@@ -32,7 +33,7 @@ public class CommentService {
     //댓글 조회
     public List<CommentResponseDto> getAllComment(Long postId) {
         Post post=findPostById(postId);
-        List<Comment> commentList=post.getComments; //Post Entity 관련 부분이라 일단 두겠습니다.
+        /*List<Comment> commentList=post.getComments; */ //Post Entity 관련 부분이라 일단 두겠습니다.
         List<CommentResponseDto> responseDtoList=new ArrayList<>();
         for(Comment responseDto : commentList){
             responseDtoList.add(new CommentResponseDto(responseDto));
@@ -48,6 +49,7 @@ public class CommentService {
             comment.update(requestDto);
             return new CommentResponseDto(comment);
         }else throw new IllegalArgumentException("ID가 일치하지 않습니다.");
+
     }
 
     //댓글 삭제
@@ -57,6 +59,7 @@ public class CommentService {
             commentRepository.delete(comment);
             return ResponseEntity.ok("댓글이 삭제되었습니다.");
         }else throw new IllegalArgumentException("ID가 일치하지 않습니다.");
+
     }
 
     // id 존재 확인 메서드
@@ -69,6 +72,7 @@ public class CommentService {
     private Post findPostById(Long id) {
         return postRepository.findById(id).orElseThrow(() ->    //postRepository 부분이라 두겠습니다.
                 new IllegalArgumentException("해당 게시물을 찾을 수 없습니다."));
+
     }
 
 

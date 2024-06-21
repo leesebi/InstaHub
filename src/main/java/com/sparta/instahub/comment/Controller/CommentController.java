@@ -26,8 +26,8 @@ public class CommentController {
     @PostMapping("/{postId}/comments")
     public CommentResponseDto createComment(@PathVariable Long postId,
                                             @Valid @RequestBody CommentRequestDto requestDto,
-                                            @AuthenticationPrincipal UserDetailsImpl userDetails){  //User쪽 관련 내용이라 그대로 두겠습니다.
-        return commentService.createComment(postId, requestDto, userDetails.getUser());
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return commentService.createComment(postId, requestDto  ,userDetails.getUser());
     }
 
     //댓글 조회
@@ -40,14 +40,15 @@ public class CommentController {
     @PutMapping("/{postId}/comments")
     public CommentResponseDto updateComment(@PathVariable Long postId,
                                             @Valid @RequestBody CommentRequestDto requestDto,
-                                            @AuthenticationPrincipal UserDetailsImpl userDetails){//User쪽 관련 내용이라 그대로 두겠습니다.
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
         return commentService.updateComment(postId, userDetails.getUser());
+
     }
 
     //댓글 삭제
     @DeleteMapping("/{postId}comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
-                                                @AuthenticationPrincipal UserDetailsImpl userDetails){//User쪽 관련 내용이라 그대로 두겠습니다.
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails){
         return commentService.deleteComment(commentId, userDetails.getUser());
     }
 
