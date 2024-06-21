@@ -168,4 +168,8 @@ public class UserServiceImpl implements UserService {
         user.unblockUser();
         return userRepository.save(user);
     }
+
+    public User getUserByName(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
