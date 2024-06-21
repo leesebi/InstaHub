@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
         );
         // 탈퇴
         user.withdraw();
-        user.clearToken(refreshToken);
+        user.clearRefreshToken();
         // user 정보 저장
         userRepository.save(user);
     }

@@ -112,7 +112,7 @@ public class User extends BaseEntity {
     }
 
     // 토큰 삭제
-    public void clearToken(String refreshToken) {
+    public void clearRefreshToken() {
         this.refreshToken = null;
     }
 }
