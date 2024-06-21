@@ -1,5 +1,6 @@
 package com.sparta.instahub.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"posts", "comments", "profile"})
 public class User extends BaseEntity {
 
     // 기본키
@@ -99,5 +101,13 @@ public class User extends BaseEntity {
     //리프레시 토큰 업데이트
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void updateUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 }
