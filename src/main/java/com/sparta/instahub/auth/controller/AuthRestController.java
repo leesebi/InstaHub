@@ -74,8 +74,8 @@ public class AuthRestController {
      * @return
      */
     @PatchMapping("/withdraw")
-    public ResponseEntity<String> withdraw(@RequestParam String userId, String accessToken, String refreshToken) {
-        userService.withdraw(userId, accessToken, refreshToken);
+    public ResponseEntity<String> withdraw(@RequestParam String userId, String password, String accessToken, String refreshToken) {
+        userService.withdraw(userId, password, accessToken, refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body("회원탈퇴가 완료되었습니다.");
     }
 

@@ -24,5 +24,5 @@ public interface UserService {
     void logout(String userId, String accessToken);
 
     // 탈퇴
-    void withdraw(String userId, String accessToken, String refreshToken);
+    void withdraw(String userId, String password, String accessToken, String refreshToken);
 }

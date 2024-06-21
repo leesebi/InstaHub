@@ -125,11 +125,15 @@ public class UserServiceImpl implements UserService {
      * @param refreshToken
      */
     @Override
-    public void withdraw(String userId, String accessToken, String refreshToken) {
+    public void withdraw(String userId, String password, String accessToken, String refreshToken) {
         // User 찾기
         User user = userRepository.findByUserId(userId).orElseThrow(
                 () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         // 탈퇴
         user.withdraw();
         user.clearRefreshToken();
