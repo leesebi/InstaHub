@@ -96,6 +96,11 @@ public class User extends BaseEntity {
         this.userId = userId;
     }
 
+    // 로그인 상태 변경
+    public void login() {
+        this.userStatus = UserStatus.ACTIVE;
+    }
+
     // 로그아웃 (UserStatus 변경)
     public void logout() {
         this.userStatus = UserStatus.LOGOUT; // userStatus를 LOGOUT으로 변경
