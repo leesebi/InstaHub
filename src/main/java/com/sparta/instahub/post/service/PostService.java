@@ -1,14 +1,21 @@
 package com.sparta.instahub.post.service;
 
 import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.auth.entity.UserRole;
 import com.sparta.instahub.auth.repository.UserRepository;
+import com.sparta.instahub.auth.service.UserService;
+import com.sparta.instahub.auth.service.UserServiceImpl;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -18,8 +25,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
-
+    private final UserServiceImpl userService;
 
     // 모든 게시물 조회
     @Transactional(readOnly = true)
@@ -37,7 +43,7 @@ public class PostService {
     @Transactional
     public Post createPost(String title, String content, String imageUrl, String username) {
         // 현재 로그인된 사용자 가져오기
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userService.getUserByName(username);
 
         Post post = Post.builder()
                 .user(user)
@@ -50,12 +56,12 @@ public class PostService {
 
     // 게시물 수정
     @Transactional
-    public Post updatePost(Long id, String title, String content, String imageUrl,String username) {
+    public Post updatePost(Long id, String title, String content, String imageUrl, String username) {
         // 현재 로그인된 사용자 가져오기
-        User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User currentUser = userService.getUserByName(username);
         Post post = getPostById(id); // ID로 게시물 조회
 
-        if(!post.getUser().equals(currentUser)) {
+        if (!post.getUser().equals(currentUser)) {
             throw new IllegalArgumentException("You are not authorized to update this post");
         }
         post.update(title, content, imageUrl); // 게시물 업데이트
@@ -64,15 +70,21 @@ public class PostService {
 
     // 게시물 삭제
     @Transactional
-    public void deletePost(Long id,String username) {
-        User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public void deletePost(Long id, String username) {
+        User currentUser = userService.getUserByName(username);
         Post post = getPostById(id); // ID로 게시물 조회
 
-        // 현재 로그인된 사용자가 게시글 작성자인지 확인
-        if (!post.getUser().equals(currentUser)) {
+        // 현재 로그인된 사용자가 게시글 작성자이거나 관리자인지 확인
+        if (!post.getUser().equals(currentUser) && currentUser.getUserRole() != UserRole.ADMIN) {
             throw new IllegalArgumentException("You are not authorized to delete this post");
         }
 
         postRepository.deleteById(id); // ID로 게시물 삭제
+    }
+
+    // 모든 게시물 삭제
+    @Transactional
+    public void deleteAllPosts() {
+        postRepository.deleteAll();
     }
 }
