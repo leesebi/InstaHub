@@ -88,21 +88,31 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.ACTIVE;
     }
 
-    public void updateEmail(String email){
+    public void updateEmail(String email) {
         this.email = email;
     }
 
-    public void updateUserId(String userId){
+    public void updateUserId(String userId) {
         this.userId = userId;
     }
 
-    // 로그아웃
+    // 로그아웃 (UserStatus 변경)
     public void logout() {
         this.userStatus = UserStatus.LOGOUT; // userStatus를 LOGOUT으로 변경
     }
 
-    //리프레시 토큰 업데이트
+    // 탈퇴 (UserStatus 변경)
+    public void withdraw() {
+        this.userStatus = UserStatus.WITHDRAWN;
+    }
+
+    // 리프레시 토큰 업데이트
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    // 토큰 삭제
+    public void clearToken(String refreshToken) {
+        this.refreshToken = null;
     }
 }

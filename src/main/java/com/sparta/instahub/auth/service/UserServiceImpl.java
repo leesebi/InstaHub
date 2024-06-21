@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 로그아웃 메서드
+     *
      * @param userId
      * @param accessToken
      */
@@ -112,6 +113,26 @@ public class UserServiceImpl implements UserService {
         );
         // logout
         user.logout();
+        // user 정보 저장
+        userRepository.save(user);
+    }
+
+    /**
+     * 회원 탈퇴 (refreshToken 삭제)
+     *
+     * @param userId
+     * @param accessToken
+     * @param refreshToken
+     */
+    @Override
+    public void withdraw(String userId, String accessToken, String refreshToken) {
+        // User 찾기
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        // 탈퇴
+        user.withdraw();
+        user.clearToken(refreshToken);
         // user 정보 저장
         userRepository.save(user);
     }

@@ -60,9 +60,23 @@ public class AuthRestController {
      * @return
      */
     @PostMapping("/logout")
-    public ResponseEntity<String> logout (@RequestParam String userId, String accessToken) {
+    public ResponseEntity<String> logout(@RequestParam String userId, String accessToken) {
         userService.logout(userId, accessToken);
         return ResponseEntity.status(HttpStatus.OK).body("로그아웃 되었습니다");
+    }
+
+    /**
+     * 회원탈퇴
+     *
+     * @param userId
+     * @param accessToken
+     * @param refreshToken
+     * @return
+     */
+    @PatchMapping("/withdraw")
+    public ResponseEntity<String> withdraw(@RequestParam String userId, String accessToken, String refreshToken) {
+        userService.withdraw(userId, accessToken, refreshToken);
+        return ResponseEntity.status(HttpStatus.OK).body("회원탈퇴가 완료되었습니다.");
     }
 
     /**

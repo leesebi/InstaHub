@@ -1,17 +1,10 @@
 package com.sparta.instahub.auth.service;
 
-import com.sparta.instahub.auth.dto.SignupRequestDto;
 import com.sparta.instahub.auth.dto.TokenResponseDto;
 import com.sparta.instahub.auth.entity.LoginRequest;
 import com.sparta.instahub.auth.entity.LoginResponse;
 import com.sparta.instahub.auth.entity.SignupRequest;
 import com.sparta.instahub.auth.entity.User;
-import com.sparta.instahub.auth.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 
 public interface UserService {
@@ -29,4 +22,7 @@ public interface UserService {
 
     // 로그아웃
     void logout(String userId, String accessToken);
+
+    // 탈퇴
+    void withdraw(String userId, String accessToken, String refreshToken);
 }
