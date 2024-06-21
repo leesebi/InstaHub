@@ -74,7 +74,7 @@ public class PostController {
     }
 
     // 게시물 수정 요청 처리
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetails userDetails) {
         Post post = postService.updatePost(id, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl(), userDetails.getUsername());
         PostResponseDto postResponseDto = PostResponseDto.builder()
