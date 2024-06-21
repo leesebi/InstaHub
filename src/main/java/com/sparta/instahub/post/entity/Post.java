@@ -47,7 +47,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt; // 수정일시
 
-    //Comment Service 내 post.getComments 관련
+    //Comment Service 내 post.getComments 관련 - 게시물 삭제될 경우 게시물 내 모든 댓글 삭제
     @OneToMany(mappedBy = "post", cascade =CascadeType.ALL, orphanRemoval = true)
     public List<Comment> getComments;
 
