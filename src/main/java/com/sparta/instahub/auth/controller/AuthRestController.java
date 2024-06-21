@@ -52,7 +52,13 @@ public class AuthRestController {
         return new ResponseEntity<>("로그인 성공", headers, HttpStatus.OK);
     }
 
-    //logout
+    /**
+     * 로그아웃
+     *
+     * @param userId
+     * @param accessToken
+     * @return
+     */
     @PostMapping("/logout")
     public ResponseEntity<String> logout (@RequestParam String userId, String accessToken) {
         userService.logout(userId, accessToken);

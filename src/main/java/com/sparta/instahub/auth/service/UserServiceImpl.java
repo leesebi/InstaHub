@@ -99,13 +99,21 @@ public class UserServiceImpl implements UserService {
         return new LoginResponse(accessToken, refreshToken);
     }
 
-    // logout method
+    /**
+     * 로그아웃 메서드
+     * @param userId
+     * @param accessToken
+     */
     @Override
     public void logout(String userId, String accessToken) {
+        // User 찾기
         User user = userRepository.findByUserId(userId).orElseThrow(
                 () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
+        // logout
         user.logout();
+        // user 정보 저장
+        userRepository.save(user);
     }
 
     /**
