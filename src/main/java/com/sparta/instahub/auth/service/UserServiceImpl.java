@@ -18,6 +18,19 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    @Override
+    public User update(String userId, String newEmail, String newUserId) {
+
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("다시 확인해주세요")
+        );
+
+        user.updateUserId(newUserId);
+        user.updateEmail(newEmail);
+
+        return userRepository.save(user);
+    }
+
     /**
      * 회원가입 메서드
      *
