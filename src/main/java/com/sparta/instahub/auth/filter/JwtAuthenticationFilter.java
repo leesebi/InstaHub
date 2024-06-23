@@ -1,8 +1,9 @@
 package com.sparta.instahub.auth.filter;
 
+import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.auth.entity.UserStatus;
 import com.sparta.instahub.auth.jwt.JwtUtil;
 import com.sparta.instahub.auth.repository.UserRepository;
-import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +16,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -72,6 +72,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 User user = optionalUser.get();
                 String refreshToken = user.getRefreshToken();
 
+                // userStatus가 WITHDRAWN인 경우
+                if (user.getUserStatus().equals(UserStatus.WITHDRAWN)) {
+                    response.setCharacterEncoding("UTF-8"); // 한국어 설정
+                    response.getWriter().write("탈퇴한 회원입니다.");
+                    return;
+                }
                 // refreshToken이 비어있다면 다시 로그인 유도
                 if (refreshToken == null) {
                     response.setCharacterEncoding("UTF-8");
