@@ -1,6 +1,8 @@
 package com.sparta.instahub.auth.filter;
 
 import com.sparta.instahub.auth.jwt.JwtUtil;
+import com.sparta.instahub.auth.repository.UserRepository;
+import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +15,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Jwt 인증필터: 모든 HTTP가 거침
@@ -25,10 +29,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -60,15 +66,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            // JWT 토큰이 유효한 경우
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails,
-                                null,
-                                userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            // 사용자 정보를 DB에서 조회 (refreshToken을 조회하기 위함)
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                String refreshToken = user.getRefreshToken();
+
+                // refreshToken이 비어있다면 다시 로그인 유도
+                if (refreshToken == null) {
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("다시 로그인하세요");
+                    return;
+                }
+
+                // JWT 토큰이 유효한 경우
+                if (jwtUtil.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails,
+                                    null,
+                                    userDetails.getAuthorities());
+                    usernamePasswordAuthenticationToken
+                            .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }
             }
         }
         // 다음 필터로 요청을 전달
