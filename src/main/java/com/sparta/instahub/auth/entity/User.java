@@ -1,5 +1,6 @@
 package com.sparta.instahub.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties({"posts", "comments", "profile"})
 public class User extends BaseEntity {
 
     // 기본키
@@ -65,13 +69,15 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user")
     private Profile profile;
 
+    public User(String userId, String name, String email, String password) {
+        this.userId = userId;
+        this.username = name;
+        this.email = email;
+        this.password = password;
+    }
     // User와 PasswordHistroy는 1대다 관계
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordHistory> passwordHistories; // 사용자가 작성한 비밀번호 목록
-
-    public User() {
-
-    }
 
     // 사용자 역할 및 상태를 업데이트
     public void promoteToAdmin() {
@@ -88,18 +94,49 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.ACTIVE;
     }
 
-    // 이메일 업데이트
-    public void updateEmail(String email){
+    public void updateEmail(String email) {
         this.email = email;
     }
 
-    // userId 업데이트
-    public void updateUserId(String userId){
+    public void updateUserId(String userId) {
         this.userId = userId;
     }
 
     // 비밀번호 업데이트
     public void updatePassword(String password){
         this.password = password;
+    }
+
+    // 로그인 상태 변경
+    public void login() {
+        this.userStatus = UserStatus.ACTIVE;
+    }
+
+    // 로그아웃 (UserStatus 변경)
+    public void logout() {
+        this.userStatus = UserStatus.LOGOUT; // userStatus를 LOGOUT으로 변경
+    }
+
+    // 탈퇴 (UserStatus 변경)
+    public void withdraw() {
+        this.userStatus = UserStatus.WITHDRAWN;
+    }
+
+    // 리프레시 토큰 업데이트
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    // 토큰 삭제
+    public void clearRefreshToken() {
+        this.refreshToken = null;
     }
 }

@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     // 회원 정보 수정
-    @PutMapping("/users/{id}")
+    @PatchMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userRequest) {
         User updatedUser = adminService.updateUser(id, userRequest.getUsername(), userRequest.getEmail(), userRequest.getUserRole(), userRequest.getUserStatus());
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -48,21 +48,21 @@ public class AdminController {
     }
 
     // 회원 운영진으로 변경
-    @PutMapping("/users/{id}/promote")
+    @PatchMapping("/users/{id}/promote")
     public ResponseEntity<User> promoteUserToAdmin(@PathVariable Long id) {
         User promotedUser = adminService.promoteUserToAdmin(id);
         return new ResponseEntity<>(promotedUser, HttpStatus.OK);
     }
 
     // 회원 차단
-    @PutMapping("/users/{id}/block")
+    @PatchMapping("/users/{id}/block")
     public ResponseEntity<User> blockUser(@PathVariable Long id) {
         User blockedUser = adminService.blockUser(id);
         return new ResponseEntity<>(blockedUser, HttpStatus.OK);
     }
 
     // 회원 차단 해제
-    @PutMapping("/users/{id}/unblock")
+    @PatchMapping("/users/{id}/unblock")
     public ResponseEntity<User> unblockUser(@PathVariable Long id) {
         User unblockedUser = adminService.unblockUser(id);
         return new ResponseEntity<>(unblockedUser, HttpStatus.OK);
