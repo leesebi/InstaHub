@@ -7,10 +7,12 @@ import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.profile.dto.PasswordRequestDto;
 import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
+import com.sparta.instahub.profile.repository.PasswordHistoryRepository;
 import com.sparta.instahub.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,10 +21,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordHistoryRepository passwordHistoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -61,7 +65,6 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
 
-
         User user = User.builder()
                 .userId(userId)
                 .username(signupRequest.getUsername())
@@ -84,6 +87,7 @@ public class UserServiceImpl implements UserService {
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByUserId(loginRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("잘못된 비밀번호입니다.");
@@ -239,17 +243,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PasswordHistory savePasswordHistory() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication(); // 로그인 된 사용자
+    public User savePasswordHistory() {
+        Authentication loginUser =  SecurityContextHolder.getContext().getAuthentication(); // 로그인 된 사용자
+        String userName = loginUser.getName();
 
-        return new PasswordHistory(user.getPassword(), user);
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("다시 확인해주세요")
+        );
+
+        PasswordHistory passwordHistory = PasswordHistory.builder()
+                .user(user)
+                .password(user.getPassword())
+                .build();
+
+        passwordHistoryRepository.save(passwordHistory);
+        return user;
     }
 
 
     public void updatePassword(PasswordRequestDto requestDto){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication();
+        Authentication loginUser =  SecurityContextHolder.getContext().getAuthentication(); // 로그인 된 사용자
+        String userName = loginUser.getName();
 
-        user.updatePassword(requestDto.getPassword());
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("다시 확인해주세요")
+        );
+
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        user.updatePassword(encodedPassword);
         userRepository.save(user);
     }
 

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory, Long> {
+    Long countBy();
 }

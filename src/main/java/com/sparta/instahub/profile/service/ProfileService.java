@@ -11,8 +11,11 @@ import com.sparta.instahub.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,6 +24,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final PasswordHistoryRepository passwordHistoryRepository;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     // 프로필 수정
     @Transactional
@@ -43,45 +47,42 @@ public class ProfileService {
 
     // password 수정
     public void updatePassword(PasswordRequestDto requestDto) throws BadRequestException {
-        PasswordHistory passwordHistory = userService.savePasswordHistory();
+        User user = userService.savePasswordHistory();
 
-        Long id = passwordHistory.getId();
+        Long idCount = passwordHistoryRepository.countBy();
 
-        passwordComparison(id, requestDto);
+        passwordComparison(idCount, requestDto, user);
     }
 
 
     // password 비교
-    public void passwordComparison(Long id, PasswordRequestDto requestDto) throws BadRequestException{
+    public void passwordComparison(Long idCount, PasswordRequestDto requestDto, User user) throws BadRequestException{
+        List<PasswordHistory> passwordHistories = user.getPasswordHistories();
 
-        if(id > 4){
-            for(int i=0; i<3; i++) {
-                PasswordHistory password = passwordHistoryRepository.findById(id - i).orElseThrow(
-                        () -> new IllegalArgumentException("다시 확인해 주세요")
-                );
-
-                String nowPassword = password.getPassword();
-
-                if(nowPassword.equals(requestDto.getPassword())){
-                    throw new BadRequestException("사용할 수 없는 비밀번호입니다.");
+        if(idCount > 4){
+            for(long i = 1L; i<3; i++) {
+                int index = (int) (idCount - i - 1);
+                if (index < 0 || index >= passwordHistories.size()) {
+                    continue;
                 }
-                else{
-                    userService.updatePassword(requestDto);
+                String oldPassword = passwordHistories.get((int) (idCount - i)).getPassword();
+                if(passwordEncoder.matches(oldPassword, requestDto.getPassword())){
+                    throw new BadRequestException("사용할 수 없는 비밀번호입니다.");
                 }
             }
         }else {
-            for(Long i = 0L; i<id; i++) {
-                PasswordHistory password = passwordHistoryRepository.findById(i).orElseThrow(
-                        () -> new IllegalArgumentException("다시 확인해 주세요")
-                );
-                String nowPassword = password.getPassword();
+            for(long i = 1L; i<=idCount; i++) {
+                int index = (int) (idCount - i - 1);
+                if (index < 0 || index >= passwordHistories.size()) {
+                    continue;
+                }
+                String oldPassword = passwordHistories.get(Math.toIntExact(i)).getPassword();
 
-                if(nowPassword.equals(requestDto.getPassword())){
+                if(passwordEncoder.matches(oldPassword, requestDto.getPassword())){
                     throw new BadRequestException("사용할 수 없는 비밀번호입니다.");
-                }else{
-                    userService.updatePassword(requestDto);
                 }
             }
         }
+        userService.updatePassword(requestDto);
     }
 }

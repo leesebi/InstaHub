@@ -152,4 +152,5 @@ public class User extends BaseEntity {
         this.profile = user.getProfile();
         this.userStatus = user.getUserStatus();
     }
+
 }

@@ -47,7 +47,7 @@ public interface UserService {
 
     User unblockUser(Long id);
 
-    PasswordHistory savePasswordHistory();
+    User savePasswordHistory();
 
     void updatePassword(PasswordRequestDto requestDto);
 }

@@ -3,13 +3,16 @@ package com.sparta.instahub.profile.entity;
 
 import com.sparta.instahub.auth.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Profile {
 
     // 기본 키
@@ -24,7 +27,6 @@ public class Profile {
     // 이메일
     @Column
     private String email;
-
 
     // 주소
     @Column
