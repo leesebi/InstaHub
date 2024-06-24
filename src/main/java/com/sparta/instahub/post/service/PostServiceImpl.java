@@ -5,10 +5,13 @@ import com.sparta.instahub.auth.entity.UserRole;
 import com.sparta.instahub.auth.service.UserServiceImpl;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
+import com.sparta.instahub.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 // Post 엔티티에 대한 비즈니스 로직을 처리하는 서비스 클래스
@@ -18,6 +21,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserServiceImpl userService;
+    private final S3Service s3Service;
 
     // 모든 게시물 조회
     @Override
@@ -36,10 +40,14 @@ public class PostServiceImpl implements PostService {
     // 새 게시물 생성
     @Override
     @Transactional
-    public Post createPost(String title, String content, String imageUrl, String username) {
+    public Post createPost(String title, String content, MultipartFile image, String username) throws IOException {
         // 현재 로그인된 사용자 가져오기
         User user = userService.getUserByName(username);
 
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = s3Service.uploadFile(image);
+        }
         Post post = Post.builder()
                 .user(user)
                 .title(title)
@@ -52,7 +60,7 @@ public class PostServiceImpl implements PostService {
     // 게시물 수정
     @Override
     @Transactional
-    public Post updatePost(Long id, String title, String content, String imageUrl, String username) {
+    public Post updatePost(Long id, String title, String content, MultipartFile image, String username) throws IOException {
         // 현재 로그인된 사용자 가져오기
         User currentUser = userService.getUserByName(username);
         Post post = getPostById(id); // ID로 게시물 조회
@@ -60,8 +68,16 @@ public class PostServiceImpl implements PostService {
         if (!post.getUser().equals(currentUser)) {
             throw new IllegalArgumentException("You are not authorized to update this post");
         }
-        post.update(title, content, imageUrl); // 게시물 업데이트
-        return postRepository.save(post); // 업데이트된 게시물 저장
+        if (image != null && !image.isEmpty()) {
+            if (post.getImageUrl() != null) {
+                s3Service.deleteFile(post.getImageUrl());
+            }
+            String imageUrl = s3Service.uploadFile(image);
+            post.update(title, content, imageUrl);
+        } else {
+            post.update(title, content, post.getImageUrl());
+        }
+        return postRepository.save(post);
     }
 
     // 게시물 삭제
@@ -75,7 +91,9 @@ public class PostServiceImpl implements PostService {
         if (!post.getUser().equals(currentUser) && currentUser.getUserRole() != UserRole.ADMIN) {
             throw new IllegalArgumentException("You are not authorized to delete this post");
         }
-
+        if (post.getImageUrl() != null) {
+            s3Service.deleteFile(post.getImageUrl());
+        }
         postRepository.deleteById(id); // ID로 게시물 삭제
     }
 
@@ -83,6 +101,12 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void deleteAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        for(Post post: posts) {
+            if(post.getImageUrl() != null) {
+                s3Service.deleteFile(post.getImageUrl());
+            }
+        }
         postRepository.deleteAll();
     }
 }

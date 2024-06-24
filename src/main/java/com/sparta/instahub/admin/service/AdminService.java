@@ -9,105 +9,48 @@ import com.sparta.instahub.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class AdminService {
 
-    private final PostService postService;
-    private final UserServiceImpl userService;
+public interface AdminService {
 
-    private void checkIfAdmin(User user) {
-        if (user.getUserRole() != UserRole.ADMIN) {
-            throw new SecurityException("Access Denied: admin만 접근할수 있습니다.");
-        }
-    }
+    void checkIfAdmin(User user);
 
     // 전체 회원 조회
-    @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return userService.getAllUsers();
-    }
+    List<User> getAllUsers();
 
     // ID로 회원 조회
     @Transactional(readOnly = true)
-    public User getUserById(Long id) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return userService.getUserById(id);
-    }
+    public User getUserById(Long id);
 
     // 회원 정보 수정
-    @Transactional
-    public User updateUser(Long id, String username, String email, UserRole userRole, UserStatus userStatus) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return userService.updateUser(id, username, email, userRole, userStatus);
-    }
+    User updateUser(Long id, String username, String email, UserRole userRole, UserStatus userStatus);
 
     // 회원 삭제
-    @Transactional
-    public void deleteUser(Long id) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        userService.deleteUser(id);
-    }
+    void deleteUser(Long id);
 
     // 회원 운영진으로 승격
     @Transactional
-    public User promoteUserToAdmin(Long id) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return userService.promoteUserToAdmin(id);
-    }
+    public User promoteUserToAdmin(Long id);
 
     // 회원 차단
-    @Transactional
-    public User blockUser(Long id) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return userService.blockUser(id);
-    }
+    User blockUser(Long id);
 
     // 회원 차단 해제
-    @Transactional
-    public User unblockUser(Long id) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return userService.unblockUser(id);
-    }
+    User unblockUser(Long id);
 
     // 공지글 등록
-    @Transactional
-    public Post createAnnouncement(String title, String content, String imageUrl) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        return postService.createPost(title, content, imageUrl, currentAdmin.getUsername());
-    }
-
+    Post createAnnouncement(String title, String content, MultipartFile imageUrl) throws IOException;
 
     // 모든 게시글 삭제
-    @Transactional
-    public void deleteAllPosts() {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        postService.deleteAllPosts();
-    }
+    void deleteAllPosts();
 
     // 특정 게시글 삭제 (관리자)
-    @Transactional
-    public void deletePost(Long postId) {
-        User currentAdmin = getCurrentAdmin();
-        checkIfAdmin(currentAdmin);
-        postService.deletePost(postId, currentAdmin.getUsername());
-    }
+    void deletePost(Long postId);
 
     // 현재 로그인된 관리자 가져오기
-    private User getCurrentAdmin() {
-        return userService.getCurrentAdmin();
-    }
+    User getCurrentAdmin();
 }

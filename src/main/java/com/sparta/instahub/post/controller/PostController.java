@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,10 @@ public class PostController {
 
     private final PostService postService;
 
-    // 모든 게시물 조회 요청 처리
+    /**
+     * 모든 게시물 조회 요청 처리
+     * @return
+     */
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         List<Post> posts = postService.getAllPosts();
@@ -58,9 +63,9 @@ public class PostController {
 
     // 새 게시물 생성 요청 처리
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto,
-                                                      @AuthenticationPrincipal UserDetails userDetails) {
-        Post post = postService.createPost(postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl(), userDetails.getUsername());
+    public ResponseEntity<PostResponseDto> createPost(@ModelAttribute PostRequestDto postRequestDto,
+                                                      @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        Post post = postService.createPost(postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImage(), userDetails.getUsername());
         PostResponseDto postResponseDto = PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -75,8 +80,10 @@ public class PostController {
 
     // 게시물 수정 요청 처리
     @PatchMapping("/{id}")
-    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetails userDetails) {
-        Post post = postService.updatePost(id, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl(), userDetails.getUsername());
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id,
+                                                      @ModelAttribute PostRequestDto postRequestDto,
+                                                      @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        Post post = postService.updatePost(id, postRequestDto.getTitle(), postRequestDto.getContent(),postRequestDto.getImage(), userDetails.getUsername());
         PostResponseDto postResponseDto = PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
