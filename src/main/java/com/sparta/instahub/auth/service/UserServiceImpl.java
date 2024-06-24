@@ -10,12 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -102,6 +100,7 @@ public class UserServiceImpl implements UserService {
         );
         // logout
         user.logout();
+        user.clearRefreshToken();
         // user 정보 저장
         userRepository.save(user);
     }
@@ -119,6 +118,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserId(userId).orElseThrow(
                 () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
+        //이미 탈퇴한 회원인지 확인
+        if (user.getUserStatus().equals(UserStatus.WITHDRAWN)) {
+            throw new IllegalArgumentException("이미 탈퇴한 회원입니다");
+        }
         // 비밀번호 확인
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
