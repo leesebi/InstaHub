@@ -1,6 +1,5 @@
 package com.sparta.instahub.auth.service;
 
-import com.sparta.instahub.auth.dto.SignupRequestDto;
 import com.sparta.instahub.auth.dto.TokenResponseDto;
 import com.sparta.instahub.auth.entity.LoginRequest;
 import com.sparta.instahub.auth.entity.LoginResponse;
@@ -23,6 +22,12 @@ public interface UserService {
 
     // 리프레시 토큰
     TokenResponseDto refresh(String refreshToken);
+
+    // 로그아웃
+    void logout(String userId, String accessToken);
+
+    // 탈퇴
+    void withdraw(String userId, String password, String accessToken, String refreshToken);
 
     User getCurrentAdmin();
 

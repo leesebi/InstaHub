@@ -10,12 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -82,11 +80,65 @@ public class UserServiceImpl implements UserService {
         String refreshToken = jwtUtil.createRefreshToken(user.getUserId());
 
         user.updateRefreshToken(refreshToken);
+        user.login();
         userRepository.save(user);
 
         return new LoginResponse(accessToken, refreshToken);
     }
 
+    /**
+     * 로그아웃 메서드
+     *
+     * @param userId
+     * @param accessToken
+     */
+    @Override
+    public void logout(String userId, String accessToken) {
+        // User 찾기
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        // logout
+        user.logout();
+        user.clearRefreshToken();
+        // user 정보 저장
+        userRepository.save(user);
+    }
+
+    /**
+     * 회원 탈퇴 (refreshToken 삭제)
+     *
+     * @param userId
+     * @param accessToken
+     * @param refreshToken
+     */
+    @Override
+    public void withdraw(String userId, String password, String accessToken, String refreshToken) {
+        // User 찾기
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        //이미 탈퇴한 회원인지 확인
+        if (user.getUserStatus().equals(UserStatus.WITHDRAWN)) {
+            throw new IllegalArgumentException("이미 탈퇴한 회원입니다");
+        }
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        // 탈퇴
+        user.withdraw();
+        user.clearRefreshToken();
+        // user 정보 저장
+        userRepository.save(user);
+    }
+
+    /**
+     * 리프레시 토큰으로 토큰 재발급
+     *
+     * @param refreshToken
+     * @return TokenResponseDto
+     */
     @Override
     public TokenResponseDto refresh(String refreshToken) {
         String username = jwtUtil.getUsernameFromToken(refreshToken);
