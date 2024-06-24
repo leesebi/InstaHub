@@ -12,5 +12,6 @@ public class CommentResponseDto {
         this.id=comment.getId();
         this.contents=comment.getContents();
 
+
     }
 }

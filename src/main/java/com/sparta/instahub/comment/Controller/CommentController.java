@@ -46,7 +46,7 @@ public class CommentController {
         return commentService.updateComment(postId, requestDto,userDetails.getUsername());
 
     }
-
+    //
     //댓글 삭제
     @DeleteMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
