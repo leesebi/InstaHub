@@ -49,40 +49,41 @@ public class ProfileService {
     public void updatePassword(PasswordRequestDto requestDto) throws BadRequestException {
         User user = userService.savePasswordHistory();
 
-        Long idCount = passwordHistoryRepository.countBy();
-
-        passwordComparison(idCount, requestDto, user);
+        passwordComparison(requestDto, user);
     }
 
 
     // password 비교
-    public void passwordComparison(Long idCount, PasswordRequestDto requestDto, User user) throws BadRequestException{
+    public void passwordComparison(PasswordRequestDto requestDto, User user) {
         List<PasswordHistory> passwordHistories = user.getPasswordHistories();
-
+        int idCount = passwordHistories.size();
         if(idCount > 4){
-            for(long i = 1L; i<3; i++) {
-                int index = (int) (idCount - i - 1);
-                if (index < 0 || index >= passwordHistories.size()) {
-                    continue;
-                }
-                String oldPassword = passwordHistories.get((int) (idCount - i)).getPassword();
-                if(passwordEncoder.matches(oldPassword, requestDto.getPassword())){
-                    throw new BadRequestException("사용할 수 없는 비밀번호입니다.");
-                }
-            }
-        }else {
-            for(long i = 1L; i<=idCount; i++) {
-                int index = (int) (idCount - i - 1);
-                if (index < 0 || index >= passwordHistories.size()) {
-                    continue;
-                }
-                String oldPassword = passwordHistories.get(Math.toIntExact(i)).getPassword();
+            for(int i = 1; i<3; i++) {
+                String oldPassword = passwordHistories.get(idCount - i).getPassword();
 
-                if(passwordEncoder.matches(oldPassword, requestDto.getPassword())){
-                    throw new BadRequestException("사용할 수 없는 비밀번호입니다.");
+                if(passwordEncoder.matches(requestDto.getPassword(), oldPassword)){
+                    throw new IllegalArgumentException("사용할 수 없는 비밀번호입니다.");
+                }else{
+                    userService.updatePassword(requestDto);
                 }
             }
         }
-        userService.updatePassword(requestDto);
+        else {
+            for(int i = 0; i<=idCount; i++) {
+                int index = idCount - i - 1;
+                if (index < 0 || index >= passwordHistories.size()) {
+                    continue;
+                }
+
+                String oldPassword = passwordHistories.get(index).getPassword();
+
+                if(passwordEncoder.matches(requestDto.getPassword(), oldPassword)){
+                    throw new IllegalArgumentException("사용할 수 없는 비밀번호입니다.");
+                }else{
+                    userService.updatePassword(requestDto);
+                }
+            }
+        }
+
     }
 }
