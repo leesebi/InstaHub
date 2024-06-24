@@ -78,7 +78,7 @@ public class CommentService {
 
     //게시물 id 존재 확인
     private Post findPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() ->    //postRepository 부분이라 두겠습니다.
+        return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 게시물을 찾을 수 없습니다."));
 
     }
