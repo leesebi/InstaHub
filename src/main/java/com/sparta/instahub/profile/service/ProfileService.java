@@ -71,31 +71,32 @@ public class ProfileService {
         log.info("idCount : " + idCount);
 
         if (idCount == 0) {
-            if(passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
+            if(passwordEncoder.matches(requestDto.getPassword(), nowPassword)){
                 throw new IllegalArgumentException("비밀번호를 사용할 수 없습니다.");
             }
             userService.savePasswordHistory();
             userService.updatePassword(requestDto);
         } else if (idCount < 3) {
-           for(PasswordHistory passwordHistory : passwordHistories){
-               String oldPassword = passwordHistory.getPassword();
+           for(int i=0; i<idCount; i++){
+               String oldPassword = passwordHistories.get(i).getPassword();
                if(passwordEncoder.matches(requestDto.getPassword(), oldPassword) || passwordEncoder.matches(requestDto.getPassword(), nowPassword)){
-                   throw new IllegalArgumentException("비밀번호를 사용할 수 없습니다.");
+                   throw new IllegalArgumentException("최근 변경된 비밀번호입니다. 새로운 비밀번호를 입력해주세요.");
                }
            }
             userService.savePasswordHistory();
             userService.updatePassword(requestDto);
         } else {
-            List<PasswordHistory> recentPasswordHistoryList = passwordHistoryRepository.findTop3ByOrderById();
-
-            for (PasswordHistory passwordHistory : recentPasswordHistoryList) {
-                String oldPassword = passwordHistory.getPassword();
+            for(int i=0; i<3; i++){
+                String oldPassword = passwordHistories.get(idCount - 1 - i).getPassword();
                 if(passwordEncoder.matches(requestDto.getPassword(), oldPassword) || passwordEncoder.matches(requestDto.getPassword(), nowPassword)){
-                    throw new IllegalArgumentException("비밀번호를 사용할 수 없습니다.");
+                    throw new IllegalArgumentException("최근 변경된 비밀번호입니다. 새로운 비밀번호를 입력해주세요.");
                 }
             }
             userService.savePasswordHistory();
             userService.updatePassword(requestDto);
+
         }
     }
+
+
 }
