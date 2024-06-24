@@ -4,6 +4,7 @@ import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.entity.UserRole;
 import com.sparta.instahub.auth.entity.UserStatus;
 import com.sparta.instahub.auth.service.UserServiceImpl;
+import com.sparta.instahub.exception.UnauthorizedException;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class AdminServiceImpl implements AdminService {
 
     public void checkIfAdmin(User user) {
         if (user.getUserRole() != UserRole.ADMIN) {
-            throw new SecurityException("Access Denied: admin만 접근할수 있습니다.");
+            throw new UnauthorizedException("Access Denied: admin만 접근할수 있습니다.");
         }
     }
 
@@ -85,7 +86,7 @@ public class AdminServiceImpl implements AdminService {
 
     // 공지글 등록
     @Transactional
-    public Post createAnnouncement(String title, String content, MultipartFile imageUrl) throws IOException {
+    public Post createAnnouncement(String title, String content, MultipartFile imageUrl) {
         User currentAdmin = getCurrentAdmin();
         checkIfAdmin(currentAdmin);
         return postService.createPost(title, content, imageUrl, currentAdmin.getUsername());

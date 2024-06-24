@@ -2,6 +2,7 @@ package com.sparta.instahub.s3.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.sparta.instahub.exception.InaccessibleImageException;
 import com.sparta.instahub.s3.entity.Image;
 import com.sparta.instahub.s3.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,22 +24,27 @@ public class S3ServiceImpl implements S3Service {
     private String bucketName;
 
     // 파일을 S3에 업로드하고 파일 URL을 반환
-    public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = generateFileName(file.getOriginalFilename());
+    public String uploadFile(MultipartFile file){
+        try {
+            String fileName = generateFileName(file.getOriginalFilename());
 
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.getSize());
-        metadata.setContentType(file.getContentType());
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
 
-        amazonS3.putObject(bucketName, fileName, file.getInputStream(), metadata);
+            amazonS3.putObject(bucketName, fileName, file.getInputStream(), metadata);
 
-        String fileUrl = getFileUrl(fileName);
+            String fileUrl = getFileUrl(fileName);
 
-        // 이미지 엔티티를 생성하여 데이터베이스에 저장
-        Image image = new Image(fileName, fileUrl);
-        imageRepository.save(image);
+            // 이미지 엔티티를 생성하여 데이터베이스에 저장
+            Image image = new Image(fileName, fileUrl);
+            imageRepository.save(image);
 
-        return fileUrl;
+            return fileUrl;
+        }
+        catch (IOException e) {
+            throw new InaccessibleImageException("이미지를 업로드할 수 없습니다. " + e.getMessage());
+        }
     }
     // 파일을 S3에서 삭제하고 데이터베이스에서도 삭제하는 메서드
     public void deleteFile(String fileUrl) {

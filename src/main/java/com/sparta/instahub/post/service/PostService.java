@@ -16,10 +16,10 @@ public interface PostService {
     Post getPostById(Long id);
 
     // 새 게시물 생성
-    Post createPost(String title, String content, MultipartFile imageUrl, String username) throws IOException;
+    Post createPost(String title, String content, MultipartFile imageUrl, String username);
 
     // 게시물 수정
-    Post updatePost(Long id, String title, String content, MultipartFile imageUrl, String username) throws IOException;
+    Post updatePost(Long id, String title, String content, MultipartFile imageUrl, String username);
 
     // 게시물 삭제
     void deletePost(Long id, String username);
