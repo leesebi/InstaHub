@@ -1,5 +1,6 @@
 package com.sparta.instahub.profile.service;
 
+import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.service.UserService;
 import com.sparta.instahub.profile.dto.PasswordRequestDto;
 import com.sparta.instahub.profile.dto.ProfileRequestDto;
@@ -8,10 +9,12 @@ import com.sparta.instahub.profile.entity.Profile;
 import com.sparta.instahub.profile.repository.PasswordHistoryRepository;
 import com.sparta.instahub.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
@@ -22,6 +25,7 @@ public class ProfileService {
     // 프로필 수정
     @Transactional
     public Profile updateProfile(Long id, ProfileRequestDto requestDto) {
+        log.info("update profile" + id);
         userService.update(id, requestDto.getEmail(), requestDto.getUserId());
 
         Profile profile = profileRepository.findByUser_Id(id).orElseThrow(

@@ -3,8 +3,10 @@ package com.sparta.instahub.profile.entity;
 
 import com.sparta.instahub.auth.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
+@Builder
 public class Profile {
 
     // 기본 키
@@ -31,5 +33,9 @@ public class Profile {
 
     public void updateAddress(String address){
         this.address = address;
+    }
+
+    public void updateUser(User user) {
+        this.user = user;
     }
 }

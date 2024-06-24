@@ -4,8 +4,13 @@ import com.sparta.instahub.auth.dto.TokenResponseDto;
 import com.sparta.instahub.auth.entity.*;
 import com.sparta.instahub.auth.jwt.JwtUtil;
 import com.sparta.instahub.auth.repository.UserRepository;
+import com.sparta.instahub.profile.dto.PasswordRequestDto;
+import com.sparta.instahub.profile.entity.PasswordHistory;
+import com.sparta.instahub.profile.entity.Profile;
+import com.sparta.instahub.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,14 +27,13 @@ public class UserServiceImpl implements UserService {
     private final JwtUtil jwtUtil;
 
     @Override
-    public User update(String userId, String newEmail, String newUserId) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
+    public User update(Long userId, String newEmail, String newUserId) {
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("다시 확인해주세요")
         );
 
         user.updateUserId(newUserId);
         user.updateEmail(newEmail);
-
         return userRepository.save(user);
     }
 
@@ -56,14 +60,20 @@ public class UserServiceImpl implements UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(password);
+
+        Profile profile = Profile.builder().build();
+
         User user = User.builder()
                 .userId(userId)
                 .username(signupRequest.getUsername())
                 .email(email)
                 .password(encodedPassword)
+                .profile(profile)
                 .userStatus(UserStatus.ACTIVE)
                 .userRole(UserRole.USER)
                 .build();
+
+        profile.updateUser(user);
         userRepository.save(user);
     }
 
@@ -224,4 +234,21 @@ public class UserServiceImpl implements UserService {
     public User getUserByName(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
+
+    @Override
+    public PasswordHistory savePasswordHistory() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication(); // 로그인 된 사용자
+
+        return new PasswordHistory(user.getPassword(), user);
+    }
+
+
+    public void updatePassword(PasswordRequestDto requestDto){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication();
+
+        user.updatePassword(requestDto.getPassword());
+        userRepository.save(user);
+    }
+
+
 }

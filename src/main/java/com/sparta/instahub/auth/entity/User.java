@@ -66,7 +66,7 @@ public class User extends BaseEntity {
     private List<Comment> comments; // 사용자가 작성한 댓글 목록
 
     // User와 Profile 1대1 관계
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
 
     public User(String userId, String name, String email, String password) {
@@ -78,6 +78,10 @@ public class User extends BaseEntity {
     // User와 PasswordHistroy는 1대다 관계
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordHistory> passwordHistories; // 사용자가 작성한 비밀번호 목록
+
+    public void updateProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     // 사용자 역할 및 상태를 업데이트
     public void promoteToAdmin() {

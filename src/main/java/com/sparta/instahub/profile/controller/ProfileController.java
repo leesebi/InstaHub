@@ -19,7 +19,6 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-
     @PutMapping("/{Id}")
     public ResponseEntity<Profile> updateProfile(@PathVariable Long Id,
                                                  @RequestBody ProfileRequestDto requestDto) {
