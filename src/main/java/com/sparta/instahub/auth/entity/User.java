@@ -143,4 +143,13 @@ public class User extends BaseEntity {
     public void clearRefreshToken() {
         this.refreshToken = null;
     }
+
+    public void updateUserInfo(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.userRole = user.getUserRole();
+        this.profile = user.getProfile();
+        this.userStatus = user.getUserStatus();
+    }
 }

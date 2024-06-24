@@ -61,19 +61,22 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
 
-        Profile profile = Profile.builder().build();
 
         User user = User.builder()
                 .userId(userId)
                 .username(signupRequest.getUsername())
                 .email(email)
                 .password(encodedPassword)
-                .profile(profile)
                 .userStatus(UserStatus.ACTIVE)
                 .userRole(UserRole.USER)
                 .build();
 
-        profile.updateUser(user);
+        Profile profile = Profile.builder()
+                .user(user)
+                .build();
+
+        user.updateProfile(profile);
+
         userRepository.save(user);
     }
 

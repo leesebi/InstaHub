@@ -26,14 +26,17 @@ public class ProfileService {
     @Transactional
     public Profile updateProfile(Long id, ProfileRequestDto requestDto) {
         log.info("update profile" + id);
-        userService.update(id, requestDto.getEmail(), requestDto.getUserId());
 
         Profile profile = profileRepository.findByUser_Id(id).orElseThrow(
                 () -> new IllegalArgumentException("다시 확인해 주세요")
         );
-
+        profile.updateEmail(requestDto.getEmail());
         profile.updateAddress(requestDto.getAddress());
         profile.updateIntroduction(requestDto.getIntroduction());
+
+        User user = profile.findUser();
+        user.updateProfile(profile);
+        user.updateEmail(requestDto.getEmail());
 
         return profileRepository.save(profile);
     }
