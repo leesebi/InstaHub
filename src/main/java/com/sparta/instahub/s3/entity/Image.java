@@ -1,6 +1,6 @@
 package com.sparta.instahub.s3.entity;
 
-import com.sparta.instahub.timeStamp.TimeStamp;
+import com.sparta.instahub.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Image extends TimeStamp {
+public class Image extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -70,8 +71,8 @@ public class AdminController {
 
     // 공지글 등록
     @PostMapping("/announcement")
-    public ResponseEntity<PostResponseDto> createAnnouncement(@RequestBody PostRequestDto postRequestDto) {
-        Post post = adminService.createAnnouncement(postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImageUrl());
+    public ResponseEntity<PostResponseDto> createAnnouncement(@ModelAttribute PostRequestDto postRequestDto) throws IOException {
+        Post post = adminService.createAnnouncement(postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getImage());
         PostResponseDto postResponseDto = PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())

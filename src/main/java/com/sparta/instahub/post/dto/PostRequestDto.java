@@ -7,13 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostRequestDto {
     private String title; // 게시물 제목
     private String content; // 게시물 내용
-    private String imageUrl;
+    private MultipartFile image;
 
 
     // 필드를 초기화
-    public PostRequestDto(String title, String content, String imageUrl) {
+    public PostRequestDto(String title, String content, MultipartFile image) {
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrl;
+        this.image = image;
     }
 }
