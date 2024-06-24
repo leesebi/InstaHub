@@ -50,4 +50,7 @@ public interface UserService {
     User savePasswordHistory();
 
     void updatePassword(PasswordRequestDto requestDto);
+
+    User getUserByName(String username);
+
 }
