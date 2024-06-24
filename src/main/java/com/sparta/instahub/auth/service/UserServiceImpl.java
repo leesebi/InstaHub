@@ -4,8 +4,15 @@ import com.sparta.instahub.auth.dto.TokenResponseDto;
 import com.sparta.instahub.auth.entity.*;
 import com.sparta.instahub.auth.jwt.JwtUtil;
 import com.sparta.instahub.auth.repository.UserRepository;
+import com.sparta.instahub.profile.dto.PasswordRequestDto;
+import com.sparta.instahub.profile.entity.PasswordHistory;
+import com.sparta.instahub.profile.entity.Profile;
+import com.sparta.instahub.profile.repository.PasswordHistoryRepository;
+import com.sparta.instahub.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,22 +21,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordHistoryRepository passwordHistoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     @Override
-    public User update(String userId, String newEmail, String newUserId) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
+    public User update(Long userId, String newEmail, String newUserId) {
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("다시 확인해주세요")
         );
 
         user.updateUserId(newUserId);
         user.updateEmail(newEmail);
-
         return userRepository.save(user);
     }
 
@@ -56,6 +64,7 @@ public class UserServiceImpl implements UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(password);
+
         User user = User.builder()
                 .userId(userId)
                 .username(signupRequest.getUsername())
@@ -64,6 +73,13 @@ public class UserServiceImpl implements UserService {
                 .userStatus(UserStatus.ACTIVE)
                 .userRole(UserRole.USER)
                 .build();
+
+        Profile profile = Profile.builder()
+                .user(user)
+                .build();
+
+        user.updateProfile(profile);
+
         userRepository.save(user);
     }
 
@@ -71,6 +87,7 @@ public class UserServiceImpl implements UserService {
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByUserId(loginRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("잘못된 비밀번호입니다.");
@@ -224,4 +241,38 @@ public class UserServiceImpl implements UserService {
     public User getUserByName(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
+
+    @Override
+    public User savePasswordHistory() {
+        Authentication loginUser =  SecurityContextHolder.getContext().getAuthentication(); // 로그인 된 사용자
+        String userName = loginUser.getName();
+
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("다시 확인해주세요")
+        );
+
+        PasswordHistory passwordHistory = PasswordHistory.builder()
+                .user(user)
+                .password(user.getPassword())
+                .build();
+
+        passwordHistoryRepository.save(passwordHistory);
+        return user;
+    }
+
+
+    public void updatePassword(PasswordRequestDto requestDto){
+        Authentication loginUser =  SecurityContextHolder.getContext().getAuthentication(); // 로그인 된 사용자
+        String userName = loginUser.getName();
+
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("다시 확인해주세요")
+        );
+
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        user.updatePassword(encodedPassword);
+        userRepository.save(user);
+    }
+
+
 }

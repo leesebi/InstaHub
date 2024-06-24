@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
+import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -65,7 +66,7 @@ public class User extends BaseEntity {
     private List<Comment> comments; // 사용자가 작성한 댓글 목록
 
     // User와 Profile 1대1 관계
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
 
     public User(String userId, String name, String email, String password) {
@@ -73,6 +74,13 @@ public class User extends BaseEntity {
         this.username = name;
         this.email = email;
         this.password = password;
+    }
+    // User와 PasswordHistroy는 1대다 관계
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PasswordHistory> passwordHistories; // 사용자가 작성한 비밀번호 목록
+
+    public void updateProfile(Profile profile) {
+        this.profile = profile;
     }
 
     // 사용자 역할 및 상태를 업데이트
@@ -96,6 +104,11 @@ public class User extends BaseEntity {
 
     public void updateUserId(String userId) {
         this.userId = userId;
+    }
+
+    // 비밀번호 업데이트
+    public void updatePassword(String password){
+        this.password = password;
     }
 
     // 로그인 상태 변경
@@ -130,4 +143,14 @@ public class User extends BaseEntity {
     public void clearRefreshToken() {
         this.refreshToken = null;
     }
+
+    public void updateUserInfo(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.userRole = user.getUserRole();
+        this.profile = user.getProfile();
+        this.userStatus = user.getUserStatus();
+    }
+
 }

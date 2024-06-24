@@ -7,12 +7,14 @@ import com.sparta.instahub.auth.entity.SignupRequest;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.entity.UserRole;
 import com.sparta.instahub.auth.entity.UserStatus;
+import com.sparta.instahub.profile.dto.PasswordRequestDto;
+import com.sparta.instahub.profile.entity.PasswordHistory;
 
 import java.util.List;
 
 public interface UserService {
     // 사용자 정보 업데이트
-    User update(String userId, String newEmail, String newUserId);
+    User update(Long userId, String newEmail, String newUserId);
 
     // 회원가입
     void signup(SignupRequest signupRequest);
@@ -45,6 +47,9 @@ public interface UserService {
 
     User unblockUser(Long id);
 
+    User savePasswordHistory();
+
+    void updatePassword(PasswordRequestDto requestDto);
 
     User getUserByName(String username);
 
