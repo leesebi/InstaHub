@@ -85,5 +85,5 @@
 > #### ERD
 > <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdiLO7C%2FbtsH9tTF8h0%2FG6yx9TJECUXqZRLqSR9fWK%2Fimg.png" width="500px">
 
-
-
+> #### 소프트웨어 아키텍처
+> <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FeEpBsw%2FbtsIbmeY2y2%2FIK5qqN6LPkSjqUZIPxeSo0%2Fimg.png" width="500px">
