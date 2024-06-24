@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     //댓글 수정
-    @PutMapping("/{postId}/comments{commentId}")
+    @PutMapping("/{postId}/comments/{commentId}")
     public CommentResponseDto updateComment(@PathVariable Long postId,
                                             @PathVariable Long commentId,
                                             @RequestBody CommentRequestDto requestDto,
@@ -48,7 +48,7 @@ public class CommentController {
     }
 
     //댓글 삭제
-    @DeleteMapping("/{postId}comments/{commentId}")
+    @DeleteMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
                                                 @AuthenticationPrincipal UserDetails userDetails){
         return commentService.deleteComment(commentId, userDetails.getUsername());
