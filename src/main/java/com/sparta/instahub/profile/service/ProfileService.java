@@ -4,6 +4,7 @@ import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.auth.service.UserService;
 import com.sparta.instahub.profile.dto.PasswordRequestDto;
+import com.sparta.instahub.profile.dto.PasswordResponseDto;
 import com.sparta.instahub.profile.dto.ProfileRequestDto;
 import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
@@ -50,7 +51,7 @@ public class ProfileService {
     }
 
     // password 수정
-    public void updatePassword(PasswordRequestDto requestDto) throws BadRequestException {
+    public PasswordResponseDto updatePassword(PasswordRequestDto requestDto) throws BadRequestException {
         // 현재 사용자
         Authentication loginUser =  SecurityContextHolder.getContext().getAuthentication();
         String userName = loginUser.getName();
@@ -59,12 +60,12 @@ public class ProfileService {
                 () -> new IllegalArgumentException("다시 확인해주세요")
         );
 
-        passwordComparison(requestDto, user);
+        return passwordComparison(requestDto, user);
     }
 
 
     // password 비교
-    public void passwordComparison(PasswordRequestDto requestDto, User user) {
+    public PasswordResponseDto passwordComparison(PasswordRequestDto requestDto, User user) {
         List<PasswordHistory> passwordHistories = user.getPasswordHistories();
         String nowPassword = user.getPassword();
         int idCount = passwordHistories.size();
@@ -96,6 +97,7 @@ public class ProfileService {
             userService.updatePassword(requestDto);
 
         }
+        return new PasswordResponseDto(requestDto);
     }
 
 

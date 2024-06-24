@@ -2,6 +2,7 @@ package com.sparta.instahub.profile.controller;
 
 
 import com.sparta.instahub.profile.dto.PasswordRequestDto;
+import com.sparta.instahub.profile.dto.PasswordResponseDto;
 import com.sparta.instahub.profile.dto.ProfileRequestDto;
 import com.sparta.instahub.profile.dto.ProfileResponseDto;
 import com.sparta.instahub.profile.entity.PasswordHistory;
@@ -37,9 +38,9 @@ public class ProfileController {
 
     // 비밀번호 수정
     @PutMapping("/password")
-    public ResponseEntity<?> updatePassword(@RequestBody PasswordRequestDto requestDto) throws BadRequestException {
-        profileService.updatePassword(requestDto);
-        return ResponseEntity.ok(HttpStatus.OK);
+    public ResponseEntity<PasswordResponseDto> updatePassword(@RequestBody PasswordRequestDto requestDto) throws BadRequestException {
+
+        return ResponseEntity.ok(profileService.updatePassword(requestDto));
     }
 
 }
