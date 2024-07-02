@@ -1,6 +1,7 @@
 package com.sparta.instahub.commentLike.controller;
 
 import com.sparta.instahub.commentLike.dto.LikeResponseDto;
+import com.sparta.instahub.commentLike.dto.UnLikeResponseDto;
 import com.sparta.instahub.commentLike.service.CommentLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,11 @@ public class CommentLikeController {
     @PostMapping("/comment/{commentId}/like")
     public ResponseEntity<LikeResponseDto> createCommentLike(@PathVariable Long commentId){
         return service.createLike(commentId);
+    }
+
+    @PostMapping("/comment/delete/{likeId}")
+    public ResponseEntity<UnLikeResponseDto> deleteCommentLike(@PathVariable Long likeId){
+        return service.deleteLike(likeId);
     }
 
 }

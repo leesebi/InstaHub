@@ -5,13 +5,13 @@ import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.comment.Repository.CommentRepository;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.commentLike.dto.LikeResponseDto;
+import com.sparta.instahub.commentLike.dto.UnLikeResponseDto;
 import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.commentLike.repository.CommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,9 +26,9 @@ public class CommentLikeService {
     private final UserRepository userRepository;
 
     /***
-     *
-     * @param commentId : 좋아요 할 댓글의 아이디
-     * @return 좋아요 확인
+     * 좋아요 메소드
+     * @param commentId
+     * @return
      */
     public ResponseEntity<LikeResponseDto> createLike(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
@@ -48,9 +48,26 @@ public class CommentLikeService {
         return ResponseEntity.ok(responseDto);
     }
 
+    /***
+     * 좋아요 취소
+     * @param likeId
+     * @return
+     */
+    public ResponseEntity<UnLikeResponseDto> deleteLike(Long likeId) {
+        CommentLike commentLikes = likeRepository.findById(likeId).orElseThrow(
+                () -> new IllegalArgumentException("like가 존재하지 않습니다.")
+        );
+
+        likeRepository.delete(commentLikes);
+
+        UnLikeResponseDto responseDto = new UnLikeResponseDto("좋아요가 취소되었습니다.");
+
+        return ResponseEntity.ok(responseDto);
+    }
 
     /***
-     * @return : 현재 로그인 된 사용자
+     * 현재 로그인중인 사용자 찾기
+     * @return
      */
     public User findUser(){
         Authentication loginUser = SecurityContextHolder.getContext().getAuthentication();
@@ -65,8 +82,8 @@ public class CommentLikeService {
 
     /***
      * 좋아요 가능한 지 확인
-     * @param user 현재 로그인 된 사용자
-     * @param commentId 현재 좋아요 할 댓글 Id
+     * @param user
+     * @param commentId
      */
     public void checkCommentLike(User user, Long commentId){
         List<Comment> userComments = user.getComments();
@@ -87,5 +104,6 @@ public class CommentLikeService {
         }
 
     }
+
 
 }
