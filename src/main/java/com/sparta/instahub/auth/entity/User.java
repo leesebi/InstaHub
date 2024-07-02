@@ -5,6 +5,7 @@ import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
+import com.sparta.instahub.postLike.entity.PostLike;
 import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
 import jakarta.persistence.*;
@@ -72,6 +73,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> commentLikes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikes;
 
     public User(String userId, String name, String email, String password) {
         this.userId = userId;

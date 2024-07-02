@@ -4,6 +4,7 @@ import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.commentLike.entity.CommentLike;
+import com.sparta.instahub.postLike.entity.PostLike;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,6 +53,8 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade =CascadeType.ALL, orphanRemoval = true)
     public List<Comment> getComments;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<PostLike> postLikes;
 
     // 빌더 패턴을 사용한 생성자
     @Builder
@@ -77,6 +80,8 @@ public class Post extends BaseEntity {
     }
 
 
-
-
+    public void createLike(User user) {
+        PostLike postLike = new PostLike(this, user);
+        this.postLikes.add(postLike);
+    }
 }
