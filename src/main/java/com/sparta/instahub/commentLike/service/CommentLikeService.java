@@ -55,17 +55,17 @@ public class CommentLikeService {
      * @param likeId
      * @return
      */
-    @Transactional
     public UnLikeResponseDto deleteLike(Long likeId) {
         CommentLike commentLikes = likeRepository.findById(likeId).orElseThrow(
                 () -> new IllegalArgumentException("like가 존재하지 않습니다.")
         );
 
+        Comment comment = commentLikes.getComment();
+        int likeCount = comment.getLikeCount() - 1;
+        comment.setLikeCount(likeCount);
+
         likeRepository.delete(commentLikes);
 
-        Comment comment = commentLikes.getComment();
-        int likeCount = comment.getLikes().size()-1;
-        comment.setLikeCount(likeCount);
 
         return new UnLikeResponseDto("좋아요가 취소되었습니다.");
     }

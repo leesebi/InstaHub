@@ -60,9 +60,9 @@ public class PostLikeService {
         );
 
         int likeCount = postLike.getPost().postLikes.size()-1;
-        postLikeRepository.delete(postLike);
-
         postLike.getPost().setLikeCount(likeCount);
+
+        postLikeRepository.delete(postLike);
 
         return new PostUnlikeResponseDto("post 좋아요 취소 성공");
     }
