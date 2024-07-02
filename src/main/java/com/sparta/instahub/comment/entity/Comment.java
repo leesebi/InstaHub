@@ -3,11 +3,14 @@ package com.sparta.instahub.comment.entity;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.common.entity.BaseEntity;
+import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -31,6 +34,9 @@ public class Comment extends BaseEntity {
     @Column(name = "contents", nullable = false)
     private String contents;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> likes;
+
     public Comment(CommentRequestDto requestDto, Post post, User user) {
         this.contents=requestDto.getContents();
         this.post=post;
@@ -39,5 +45,10 @@ public class Comment extends BaseEntity {
 
     public void update(CommentRequestDto requestDto) {
         this.contents=requestDto.getContents();
+    }
+
+    public void createLike(User user){
+        CommentLike commentLike = new CommentLike(this, user);
+        this.likes.add(commentLike);
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.instahub.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.instahub.comment.entity.Comment;
+import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.common.entity.BaseEntity;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.profile.entity.PasswordHistory;
@@ -68,6 +69,9 @@ public class User extends BaseEntity {
     // User와 Profile 1대1 관계
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> commentLikes;
 
     public User(String userId, String name, String email, String password) {
         this.userId = userId;

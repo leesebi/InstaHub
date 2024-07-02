@@ -3,6 +3,7 @@ package com.sparta.instahub.post.entity;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.comment.entity.Comment;
 import com.sparta.instahub.common.entity.BaseEntity;
+import com.sparta.instahub.commentLike.entity.CommentLike;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,6 +51,7 @@ public class Post extends BaseEntity {
     //Comment Service 내 post.getComments 관련 - 게시물 삭제될 경우 게시물 내 모든 댓글 삭제
     @OneToMany(mappedBy = "post", cascade =CascadeType.ALL, orphanRemoval = true)
     public List<Comment> getComments;
+
 
     // 빌더 패턴을 사용한 생성자
     @Builder
