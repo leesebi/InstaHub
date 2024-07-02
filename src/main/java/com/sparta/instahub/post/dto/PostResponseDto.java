@@ -15,9 +15,10 @@ public class PostResponseDto {
     private String imageUrl; // 게시물 이미지
     private LocalDateTime createdAt; // 생성일시
     private LocalDateTime updatedAt; // 수정일시
+    private Integer likeCount;
 
     @Builder
-    public PostResponseDto(Long id, String title, String content, String author, String imageUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public PostResponseDto(Long id, String title, String content, String author, String imageUrl, LocalDateTime createdAt, LocalDateTime updatedAt, Integer likeCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -25,6 +26,7 @@ public class PostResponseDto {
         this.author = author;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.likeCount = likeCount;
     }
 }
 

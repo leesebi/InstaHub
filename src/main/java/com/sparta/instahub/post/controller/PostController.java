@@ -40,6 +40,7 @@ public class PostController {
                         .imageUrl(post.getImageUrl())
                         .createdAt(post.getCreatedAt())
                         .updatedAt(post.getUpdatedAt())
+                        .likeCount(post.getLikeCount())
                         .build())
                 .collect(Collectors.toList());
         return new ResponseEntity<>(postResponseDtos, HttpStatus.OK);
@@ -57,6 +58,7 @@ public class PostController {
                 .imageUrl(post.getImageUrl())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
+                .likeCount(post.getLikeCount())
                 .build();
         return new ResponseEntity<>(postResponseDto, HttpStatus.OK);
     }
