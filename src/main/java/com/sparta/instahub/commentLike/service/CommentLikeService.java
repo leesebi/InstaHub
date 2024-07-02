@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,25 +31,24 @@ public class CommentLikeService {
      * @param commentId
      * @return
      */
-    public ResponseEntity<LikeResponseDto> createLike(Long commentId) {
+    @Transactional
+    public LikeResponseDto createLike(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("comment가 존재하지 않습니다.")
         );
+
+        CommentLike commentLike = new CommentLike();
 
         User user = findUser();
 
         checkCommentLike(user, commentId);
 
-        comment.createLike(user);
-        commentRepository.save(comment);
+        commentLike.setComment(comment);
+        likeRepository.save(commentLike);
 
-        int count = comment.getLikes().size();
-        comment.setLikeCount(count);
-        commentRepository.save(comment);
+        comment.increaseLike();
 
-        LikeResponseDto responseDto = new LikeResponseDto("좋아요 성공");
-
-        return ResponseEntity.ok(responseDto);
+        return new LikeResponseDto("좋아요 성공");
     }
 
     /***
@@ -56,16 +56,14 @@ public class CommentLikeService {
      * @param likeId
      * @return
      */
-    public ResponseEntity<UnLikeResponseDto> deleteLike(Long likeId) {
+    public UnLikeResponseDto deleteLike(Long likeId) {
         CommentLike commentLikes = likeRepository.findById(likeId).orElseThrow(
                 () -> new IllegalArgumentException("like가 존재하지 않습니다.")
         );
 
         likeRepository.delete(commentLikes);
 
-        UnLikeResponseDto responseDto = new UnLikeResponseDto("좋아요가 취소되었습니다.");
-
-        return ResponseEntity.ok(responseDto);
+        return new UnLikeResponseDto("좋아요가 취소되었습니다.");
     }
 
     /***
@@ -89,9 +87,8 @@ public class CommentLikeService {
      * @param commentId
      */
     public void checkCommentLike(User user, Long commentId){
+        // 본인의 게시물에 좋아요 X
         List<Comment> userComments = user.getComments();
-        List<CommentLike> userCommentLikes = user.getCommentLikes();
-        int size = userCommentLikes.size();
 
         for (Comment loginUserComment : userComments) {
             if (Objects.equals(loginUserComment.getId(), commentId)) {
@@ -99,6 +96,9 @@ public class CommentLikeService {
             }
         }
 
+        // 두번 좋아요 X
+        List<CommentLike> userCommentLikes = user.getCommentLikes();
+        int size = userCommentLikes.size();
         for(int i=0; i<size; i++){
             CommentLike commentLike = userCommentLikes.get(i);
             if(Objects.equals(commentLike.getComment().getId(), commentId)){

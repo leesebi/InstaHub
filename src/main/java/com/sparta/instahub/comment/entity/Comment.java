@@ -49,9 +49,9 @@ public class Comment extends BaseEntity {
         this.contents=requestDto.getContents();
     }
 
-    public void createLike(User user){
-        CommentLike commentLike = new CommentLike(this, user);
-        this.likes.add(commentLike);
+
+    public void increaseLike(){
+        this.likeCount = this.likes.size() + 1;
     }
 
 }

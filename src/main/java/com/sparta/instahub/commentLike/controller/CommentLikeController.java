@@ -17,12 +17,14 @@ public class CommentLikeController {
     private final CommentLikeService service;
     @PostMapping("/comment/{commentId}/like")
     public ResponseEntity<LikeResponseDto> createCommentLike(@PathVariable Long commentId){
-        return service.createLike(commentId);
+        LikeResponseDto responseDto = service.createLike(commentId);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/comment/delete/{likeId}")
     public ResponseEntity<UnLikeResponseDto> deleteCommentLike(@PathVariable Long likeId){
-        return service.deleteLike(likeId);
+        UnLikeResponseDto responseDto = service.deleteLike(likeId);
+        return ResponseEntity.ok(responseDto);
     }
 
 }
