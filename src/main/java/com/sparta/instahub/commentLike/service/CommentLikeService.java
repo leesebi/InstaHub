@@ -40,7 +40,10 @@ public class CommentLikeService {
         checkCommentLike(user, commentId);
 
         comment.createLike(user);
+        commentRepository.save(comment);
 
+        int count = comment.getLikes().size();
+        comment.setLikeCount(count);
         commentRepository.save(comment);
 
         LikeResponseDto responseDto = new LikeResponseDto("좋아요 성공");

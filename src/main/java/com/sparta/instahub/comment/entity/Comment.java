@@ -22,6 +22,8 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int likeCount;
+
     //댓글이 달린 게시물
     @ManyToOne
     @JoinColumn(name="post_id",nullable = false)
@@ -51,4 +53,5 @@ public class Comment extends BaseEntity {
         CommentLike commentLike = new CommentLike(this, user);
         this.likes.add(commentLike);
     }
+
 }
