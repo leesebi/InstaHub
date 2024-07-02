@@ -37,13 +37,12 @@ public class CommentLikeService {
                 () -> new IllegalArgumentException("comment가 존재하지 않습니다.")
         );
 
-        CommentLike commentLike = new CommentLike();
 
         User user = findUser();
 
         checkCommentLike(user, commentId);
 
-        commentLike.setComment(comment);
+        CommentLike commentLike = new CommentLike(comment, user);
         likeRepository.save(commentLike);
 
         comment.increaseLike();

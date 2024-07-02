@@ -22,7 +22,7 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int likeCount;
+    private Integer likeCount;
 
     //댓글이 달린 게시물
     @ManyToOne
