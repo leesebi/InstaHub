@@ -22,7 +22,8 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer likeCount;
+    @Column(nullable = true)
+    private Integer likeCount = 0;
 
     //댓글이 달린 게시물
     @ManyToOne
@@ -47,11 +48,6 @@ public class Comment extends BaseEntity {
 
     public void update(CommentRequestDto requestDto) {
         this.contents=requestDto.getContents();
-    }
-
-
-    public void increaseLike(){
-        this.likeCount = this.likes.size() + 1;
     }
 
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 public class CommentResponseDto {
     private Long id;
     private String contents;
-    private int likeCount;
+    private Integer likeCount;
 
     public CommentResponseDto(Comment comment) {
         this.id=comment.getId();
