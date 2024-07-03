@@ -2,6 +2,8 @@ package com.sparta.instahub.profile.entity;
 
 
 import com.sparta.instahub.auth.entity.User;
+import com.sparta.instahub.profile.dto.ProfileGetResponseDto;
+import com.sparta.instahub.profile.dto.ProfileResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +33,12 @@ public class Profile {
     // 주소
     @Column
     private String address;
+
+    @Column
+    private Integer commentLikeCount;
+
+    @Column
+    private Integer postLikeCount;
 
     // User와 1대1 관계
     @OneToOne(fetch = FetchType.LAZY)
@@ -62,4 +70,15 @@ public class Profile {
         this.address = address;
         this.user = user;
     }
+
+    public void setCommentLikeCount() {
+        this.commentLikeCount = user.getCommentLikes().size();
+    }
+
+    public void setPostLikeCount() {
+        this.postLikeCount = user.getPostLikes().size();
+    }
+
+
+
 }

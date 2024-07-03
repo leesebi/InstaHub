@@ -5,6 +5,7 @@ import com.sparta.instahub.auth.repository.UserRepository;
 import com.sparta.instahub.auth.service.UserService;
 import com.sparta.instahub.profile.dto.PasswordRequestDto;
 import com.sparta.instahub.profile.dto.PasswordResponseDto;
+import com.sparta.instahub.profile.dto.ProfileGetResponseDto;
 import com.sparta.instahub.profile.dto.ProfileRequestDto;
 import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,5 +101,19 @@ public class ProfileService {
                 }
             }
         }
+    }
+
+    public ProfileGetResponseDto getProfile(UserDetails userDetails) {
+        String userName = userDetails.getUsername();
+        User user = userService.getUserByName(userName);
+        log.error("user id"+user.getUserId());
+
+        Profile profile = user.getProfile();
+        profile.updateEmail(user.getEmail());
+        profile.setCommentLikeCount();
+        profile.setPostLikeCount();
+        profileRepository.save(profile);
+
+        return new ProfileGetResponseDto(profile.getEmail(), profile.getAddress(), profile.getIntroduction(), profile.getCommentLikeCount(), profile.getPostLikeCount());
     }
 }

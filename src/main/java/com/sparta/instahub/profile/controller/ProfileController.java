@@ -1,10 +1,7 @@
 package com.sparta.instahub.profile.controller;
 
 
-import com.sparta.instahub.profile.dto.PasswordRequestDto;
-import com.sparta.instahub.profile.dto.PasswordResponseDto;
-import com.sparta.instahub.profile.dto.ProfileRequestDto;
-import com.sparta.instahub.profile.dto.ProfileResponseDto;
+import com.sparta.instahub.profile.dto.*;
 import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
 import com.sparta.instahub.profile.service.ProfileService;
@@ -12,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,6 +40,12 @@ public class ProfileController {
     public ResponseEntity<PasswordResponseDto> updatePassword(@RequestBody PasswordRequestDto requestDto) throws BadRequestException {
 
         return ResponseEntity.ok(profileService.updatePassword(requestDto));
+    }
+
+    //프로필 조회
+    @GetMapping
+    public ResponseEntity<ProfileGetResponseDto> getProfile(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(profileService.getProfile(userDetails));
     }
 
 }
