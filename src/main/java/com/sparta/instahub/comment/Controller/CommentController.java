@@ -1,5 +1,6 @@
 package com.sparta.instahub.comment.Controller;
 
+import com.sparta.instahub.comment.dto.CommentListResponseDto;
 import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.comment.dto.CommentResponseDto;
 import com.sparta.instahub.comment.entity.Comment;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,7 +49,7 @@ public class CommentController {
         return commentService.updateComment(postId, requestDto,userDetails.getUsername());
 
     }
-    //
+
     //댓글 삭제
     @DeleteMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
@@ -54,5 +57,19 @@ public class CommentController {
         return commentService.deleteComment(commentId, userDetails.getUsername());
     }
 
+    // 좋아요 한 댓글 조회
+    @GetMapping("/comment/like/list")
+    public ResponseEntity<List<CommentListResponseDto>> getCommentLikeList(@AuthenticationPrincipal UserDetails userDetails){
+        List<Comment> commentList = commentService.getCommentLikeList(userDetails);
+
+        List<CommentListResponseDto> responseDtoList = commentList.stream()
+                .map(comment -> CommentListResponseDto.builder()
+                        .id(comment.getId())
+                        .contents(comment.getContents())
+                        .build())
+                .toList();
+
+        return ResponseEntity.ok(responseDtoList);
+    }
 
 }

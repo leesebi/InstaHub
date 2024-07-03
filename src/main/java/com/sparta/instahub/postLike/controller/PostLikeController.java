@@ -5,10 +5,7 @@ import com.sparta.instahub.postLike.dto.PostUnlikeResponseDto;
 import com.sparta.instahub.postLike.service.PostLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -27,4 +24,5 @@ public class PostLikeController {
         PostUnlikeResponseDto responseDto = service.deleteLike(likeId);
         return ResponseEntity.ok(responseDto);
     }
+
 }

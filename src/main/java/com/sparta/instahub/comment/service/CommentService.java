@@ -3,13 +3,18 @@ package com.sparta.instahub.comment.service;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.service.UserService;
 import com.sparta.instahub.comment.Repository.CommentRepository;
+import com.sparta.instahub.comment.Repository.CommentRepositoryCustomImpl;
 import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.comment.dto.CommentResponseDto;
 import com.sparta.instahub.comment.entity.Comment;
+import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserService userService;
+    private final CommentRepositoryCustomImpl commentRepositoryCustom;
 
     //댓글 생성
     public CommentResponseDto createComment (Long postId, CommentRequestDto requestDto, String username){
@@ -84,5 +90,10 @@ public class CommentService {
     }
 
 
-
+    public List<Comment> getCommentLikeList(UserDetails userDetails) {
+        String userName = userDetails.getUsername();
+        User user = userService.getUserByName(userName);
+        Pageable pageRequest = PageRequest.of(0,5);
+        return commentRepositoryCustom.findCommentWithLikeById(user.getId(), pageRequest);
+    }
 }

@@ -110,6 +110,7 @@ public class PostController {
     @GetMapping("/like")
     public ResponseEntity<List<PostResponseDto>> getLikePost(@AuthenticationPrincipal UserDetails userDetails){
         List<Post> postList = postService.getLikePost(userDetails.getUsername());
+
         List<PostResponseDto> postResponseDtoList = postList.stream()
                 .map(post -> PostResponseDto.builder()
                         .id(post.getId())
@@ -122,6 +123,7 @@ public class PostController {
                         .likeCount(post.getLikeCount())
                         .build())
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(postResponseDtoList);
     }
 }
