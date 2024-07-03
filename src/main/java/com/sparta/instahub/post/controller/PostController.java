@@ -105,4 +105,23 @@ public class PostController {
         postService.deletePost(id, userDetails.getUsername()); // 게시물 삭제
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    // 좋아요한 게시물 조회
+    @GetMapping("/like")
+    public ResponseEntity<List<PostResponseDto>> getLikePost(@AuthenticationPrincipal UserDetails userDetails){
+        List<Post> postList = postService.getLikePost(userDetails.getUsername());
+        List<PostResponseDto> postResponseDtoList = postList.stream()
+                .map(post -> PostResponseDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .author(post.getUser().getUsername())
+                        .imageUrl(post.getImageUrl())
+                        .createdAt(post.getCreatedAt())
+                        .updatedAt(post.getUpdatedAt())
+                        .likeCount(post.getLikeCount())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(postResponseDtoList);
+    }
 }
