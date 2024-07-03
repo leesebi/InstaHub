@@ -2,10 +2,10 @@ package com.sparta.instahub.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.instahub.comment.entity.Comment;
-import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.common.entity.BaseEntity;
+import com.sparta.instahub.like.entity.CommentLike;
+import com.sparta.instahub.like.entity.PostLike;
 import com.sparta.instahub.post.entity.Post;
-import com.sparta.instahub.postLike.entity.PostLike;
 import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
 import jakarta.persistence.*;

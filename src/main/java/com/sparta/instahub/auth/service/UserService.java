@@ -1,14 +1,8 @@
 package com.sparta.instahub.auth.service;
 
 import com.sparta.instahub.auth.dto.TokenResponseDto;
-import com.sparta.instahub.auth.entity.LoginRequest;
-import com.sparta.instahub.auth.entity.LoginResponse;
-import com.sparta.instahub.auth.entity.SignupRequest;
-import com.sparta.instahub.auth.entity.User;
-import com.sparta.instahub.auth.entity.UserRole;
-import com.sparta.instahub.auth.entity.UserStatus;
+import com.sparta.instahub.auth.entity.*;
 import com.sparta.instahub.profile.dto.PasswordRequestDto;
-import com.sparta.instahub.profile.entity.PasswordHistory;
 
 import java.util.List;
 

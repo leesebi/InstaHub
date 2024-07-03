@@ -2,8 +2,6 @@ package com.sparta.instahub.s3.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 public interface S3Service {
 
     // 파일을 S3에 업로드하고 파일 URL을 반환

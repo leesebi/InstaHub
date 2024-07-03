@@ -1,4 +1,4 @@
-package com.sparta.instahub.postLike.entity;
+package com.sparta.instahub.like.entity;
 
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.post.entity.Post;

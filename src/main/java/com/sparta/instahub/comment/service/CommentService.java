@@ -7,7 +7,6 @@ import com.sparta.instahub.comment.Repository.CommentRepositoryCustomImpl;
 import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.comment.dto.CommentResponseDto;
 import com.sparta.instahub.comment.entity.Comment;
-import com.sparta.instahub.commentLike.entity.CommentLike;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

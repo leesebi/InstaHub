@@ -1,4 +1,4 @@
-package com.sparta.instahub.commentLike.entity;
+package com.sparta.instahub.like.entity;
 
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.comment.entity.Comment;
@@ -10,6 +10,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table
 @NoArgsConstructor
 public class CommentLike {
     @Id

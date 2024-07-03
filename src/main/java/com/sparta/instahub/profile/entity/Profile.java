@@ -2,8 +2,6 @@ package com.sparta.instahub.profile.entity;
 
 
 import com.sparta.instahub.auth.entity.User;
-import com.sparta.instahub.profile.dto.ProfileGetResponseDto;
-import com.sparta.instahub.profile.dto.ProfileResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

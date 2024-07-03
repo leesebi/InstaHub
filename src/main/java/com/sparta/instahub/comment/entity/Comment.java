@@ -3,7 +3,7 @@ package com.sparta.instahub.comment.entity;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.comment.dto.CommentRequestDto;
 import com.sparta.instahub.common.entity.BaseEntity;
-import com.sparta.instahub.commentLike.entity.CommentLike;
+import com.sparta.instahub.like.entity.CommentLike;
 import com.sparta.instahub.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;

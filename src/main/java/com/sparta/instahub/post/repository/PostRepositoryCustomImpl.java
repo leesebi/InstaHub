@@ -1,10 +1,9 @@
 package com.sparta.instahub.post.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.instahub.auth.entity.QUser;
+import com.sparta.instahub.like.entity.QPostLike;
 import com.sparta.instahub.post.entity.Post;
 import com.sparta.instahub.post.entity.QPost;
-import com.sparta.instahub.postLike.entity.QPostLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

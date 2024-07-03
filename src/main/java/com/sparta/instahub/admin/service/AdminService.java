@@ -3,11 +3,7 @@ package com.sparta.instahub.admin.service;
 import com.sparta.instahub.auth.entity.User;
 import com.sparta.instahub.auth.entity.UserRole;
 import com.sparta.instahub.auth.entity.UserStatus;
-import com.sparta.instahub.auth.service.UserServiceImpl;
 import com.sparta.instahub.post.entity.Post;
-import com.sparta.instahub.post.service.PostService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 

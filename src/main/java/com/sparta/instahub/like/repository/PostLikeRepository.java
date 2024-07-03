@@ -1,6 +1,6 @@
-package com.sparta.instahub.postLike.repository;
+package com.sparta.instahub.like.repository;
 
-import com.sparta.instahub.postLike.entity.PostLike;
+import com.sparta.instahub.like.entity.PostLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {

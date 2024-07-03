@@ -2,12 +2,10 @@ package com.sparta.instahub.profile.controller;
 
 
 import com.sparta.instahub.profile.dto.*;
-import com.sparta.instahub.profile.entity.PasswordHistory;
 import com.sparta.instahub.profile.entity.Profile;
 import com.sparta.instahub.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

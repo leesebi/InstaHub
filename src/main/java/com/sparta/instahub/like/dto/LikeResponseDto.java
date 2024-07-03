@@ -1,6 +1,5 @@
-package com.sparta.instahub.commentLike.dto;
+package com.sparta.instahub.like.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

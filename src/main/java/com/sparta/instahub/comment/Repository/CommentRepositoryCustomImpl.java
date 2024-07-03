@@ -2,7 +2,7 @@ package com.sparta.instahub.comment.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.instahub.comment.entity.Comment;
-import com.sparta.instahub.commentLike.entity.QCommentLike;
+import com.sparta.instahub.like.entity.QCommentLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
