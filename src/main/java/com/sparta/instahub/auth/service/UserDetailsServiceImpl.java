@@ -33,10 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
         User user = userOptional.get();
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserId())
-                .password(user.getPassword())
-                .roles(user.getUserRole().name())
-                .build();
+        return new UserDetailsImpl(user);
     }
 }
